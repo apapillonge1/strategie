@@ -16,8 +16,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-public slots :
-    void my_timer();
+    void connectButtons(void);
 
 private:
     Ui::MainWindow *ui;
