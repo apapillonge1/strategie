@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,9 +16,12 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+public slots :
+    void my_timer();
 
 private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;
+    QTimer*timer;
 };
 #endif // MAINWINDOW_H

@@ -14,18 +14,40 @@ MainWindow::MainWindow(QWidget *parent)
     ui->playground->scale(0.2,0.2);
     ui->playground->setScene(&GameState::get()->playground());
 
+    ui->playground_test->scale(0.2,0.2);
+    ui->playground_test->setScene(&GameState::get()->playground());
+
     ui->stackedWidget->setCurrentIndex(0);                  //index stack widget : (0: menu 1: 2: 3: map)
 
-    connect(ui->btn_start_map, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(2);});
-    connect(ui->btn_strategie_map, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(1);});
+
+    //menu connect
+    connect(ui->btn_start_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(4);});
+    //connect(ui->btn_tests_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(0);});
+    connect(ui->btn_tests_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(1);});
+    connect(ui->btn_strategie_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(3);});
+
+    //test connect
+    connect(ui->btn_close_tests, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(0);});
+    connect(ui->btn_close_map_test, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(1);});
+    connect(ui->btn_start_tests, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(2);});
+
+    //stratégie connect
     connect(ui->btn_close_strategie, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(0);});
 
-    connect(ui->btn_start_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(2);});
-    connect(ui->btn_strategie_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(1);});
-    connect(ui->btn_tests_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(0);});
-}
+    //start connect
+    connect(ui->btn_close_menu_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(0);});
+    connect(ui->btn_go_menu_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(5);});
+    connect(ui->btn_close_map_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(4);});
+    connect(ui->btn_start_map_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(0);});
 
+
+}
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::my_timer()
+{
+
 }
