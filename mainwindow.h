@@ -18,9 +18,13 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+<<<<<<< HEAD
 public slots :
     void add_to_test_list(void);
 
+=======
+    void connectButtons(void);
+>>>>>>> 337506a8a6a7fa7c9883a5ee1f8838ab3acc9a4b
 
 private:
     Ui::MainWindow *ui;

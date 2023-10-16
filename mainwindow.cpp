@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     GameState::get()->playground().setSceneRect(scene_rect);
     QImage image = QIcon(":/ressources/images/vinyles_table_2024_BETA.svg").pixmap(scene_rect.width(), scene_rect.height()).toImage();
     GameState::get()->playground().setBackgroundBrush(image);
+
     ui->playground->scale(0.2,0.2);
     ui->playground->setScene(&GameState::get()->playground());
 
@@ -18,11 +19,25 @@ MainWindow::MainWindow(QWidget *parent)
     ui->playground_test->setScene(&GameState::get()->playground());
 
     ui->stackedWidget->setCurrentIndex(0);                  //index stack widget : (0: menu 1: 2: 3: map)
+    connectButtons();
+}
 
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
 
+void MainWindow::connectButtons()
+{
     //menu connect
+<<<<<<< HEAD
     connect(ui->btn_start_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentWidget(ui->strategie);});
     connect(ui->btn_tests_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentWidget(ui->Tests);});
+=======
+    connect(ui->btn_start_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(4);});
+    connect(ui->btn_tests_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(1);});
+    connect(ui->btn_strategie_menu, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(3);});
+>>>>>>> 337506a8a6a7fa7c9883a5ee1f8838ab3acc9a4b
 
     //test connect
     connect(ui->btn_close_tests, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentWidget(ui->menu);});
@@ -34,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
      connect(ui->btn_start_strategie, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentWidget(ui->menu_start);});
 
     //start connect
+<<<<<<< HEAD
     connect(ui->btn_close_menu_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentWidget(ui->strategie);});
     connect(ui->btn_go_menu_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentWidget(ui->map_start);});
     connect(ui->btn_close_map_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentWidget(ui->menu_start);});
@@ -78,4 +94,17 @@ void MainWindow::add_to_test_list()
 MainWindow::~MainWindow()
 {
         delete ui;
+=======
+
+    //menu start
+    connect(ui->btn_close_menu_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(0);});
+    connect(ui->btn_go_menu_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(5);});
+    //map start
+    connect(ui->btn_close_map_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(4);});
+    connect(ui->btn_start_map_start, &QPushButton::clicked, this, [this](){ui->stackedWidget->setCurrentIndex(0);});
+
+    //change buttons color
+    connect(ui->btn_bleu_menu_start, &QPushButton::clicked, this, [this](){ui->btn_bleu_menu_start->setStyleSheet("QPushButton { background-color: blue;}");ui->btn_jaune_menu_start->setDown(true);ui->btn_bleu_menu_start->setChecked(true);});
+    connect(ui->btn_jaune_menu_start, &QPushButton::clicked, this, [this](){ui->btn_jaune_menu_start->setStyleSheet("QPushButton { background-color: yellow;}");ui->btn_bleu_menu_start->setDown(true);ui->btn_jaune_menu_start->setChecked(true);});
+>>>>>>> 337506a8a6a7fa7c9883a5ee1f8838ab3acc9a4b
 }
