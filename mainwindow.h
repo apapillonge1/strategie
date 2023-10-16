@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QTimer>
+#include <QDir>
+#include <iostream>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,11 +19,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 public slots :
-    void my_timer();
+    void add_to_test_list(void);
+
 
 private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;
     QTimer*timer;
+    QDir test_strat;
 };
 #endif // MAINWINDOW_H

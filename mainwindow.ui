@@ -23,17 +23,21 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(143, 255, 238);
+background-color: rgb(213, 237, 255);</string>
+      </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="menu">
        <widget class="QLabel" name="label_infos_menu">
         <property name="geometry">
          <rect>
           <x>30</x>
-          <y>160</y>
-          <width>361</width>
-          <height>221</height>
+          <y>140</y>
+          <width>541</width>
+          <height>291</height>
          </rect>
         </property>
         <property name="text">
@@ -70,26 +74,13 @@
         <property name="geometry">
          <rect>
           <x>590</x>
-          <y>370</y>
+          <y>360</y>
           <width>191</width>
           <height>91</height>
          </rect>
         </property>
         <property name="text">
          <string>START</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btn_strategie_menu">
-        <property name="geometry">
-         <rect>
-          <x>590</x>
-          <y>260</y>
-          <width>191</width>
-          <height>91</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>STRATEGIE</string>
         </property>
        </widget>
       </widget>
@@ -128,7 +119,31 @@
            <height>439</height>
           </rect>
          </property>
-         <layout class="QGridLayout" name="gridLayout">
+         <layout class="QGridLayout" name="gridLayout" columnminimumwidth="0,0">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
+          <item row="7" column="0">
+           <widget class="QPushButton" name="pushButton_18">
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QPushButton" name="pushButton_15">
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="pushButton_10">
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
+          </item>
           <item row="10" column="0">
            <widget class="QPushButton" name="pushButton_16">
             <property name="text">
@@ -143,34 +158,6 @@
             </property>
            </widget>
           </item>
-          <item row="9" column="0">
-           <widget class="QPushButton" name="pushButton_17">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QPushButton" name="pushButton_19">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="pushButton_10">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QPushButton" name="pushButton_15">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0">
            <widget class="QPushButton" name="pushButton_14">
             <property name="text">
@@ -178,7 +165,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
+          <item row="1" column="1">
            <widget class="QPushButton" name="pushButton_8">
             <property name="enabled">
              <bool>true</bool>
@@ -188,22 +175,29 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="pushButton_20">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
+          <item row="3" column="1">
            <widget class="QPushButton" name="pushButton_9">
             <property name="text">
              <string>PushButton</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
-           <widget class="QPushButton" name="pushButton_18">
+          <item row="5" column="1">
+           <widget class="QPushButton" name="pushButton_20">
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QPushButton" name="pushButton_19">
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QPushButton" name="pushButton_17">
             <property name="text">
              <string>PushButton</string>
             </property>
@@ -212,7 +206,7 @@
          </layout>
         </widget>
        </widget>
-       <widget class="QListView" name="listView">
+       <widget class="QListView" name="listtest">
         <property name="geometry">
          <rect>
           <x>550</x>
@@ -329,123 +323,36 @@
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents_2">
+        <widget class="QWidget" name="grille_strat">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>505</width>
-           <height>432</height>
+           <width>519</width>
+           <height>369</height>
           </rect>
          </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="5" column="0">
-           <widget class="QPushButton" name="pushButton_22">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="pushButton_25">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="13" column="0">
-           <widget class="QPushButton" name="pushButton">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="0">
-           <widget class="QPushButton" name="pushButton_4">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="0">
-           <widget class="QPushButton" name="pushButton_5">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0">
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QPushButton" name="pushButton_12">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="pushButton_7">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="pushButton_11">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QPushButton" name="pushButton_23">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0">
-           <widget class="QPushButton" name="pushButton_24">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QPushButton" name="pushButton_13">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QPushButton" name="pushButton_6">
-            <property name="text">
-             <string>PushButton</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </widget>
+       </widget>
+       <widget class="QPushButton" name="btn_start_strategie">
+        <property name="geometry">
+         <rect>
+          <x>580</x>
+          <y>270</y>
+          <width>171</width>
+          <height>81</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>START</string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="menu_start">
        <widget class="QLabel" name="label_recap">
         <property name="geometry">
          <rect>
-          <x>130</x>
+          <x>560</x>
           <y>20</y>
           <width>121</width>
           <height>16</height>
@@ -458,8 +365,8 @@
        <widget class="QLabel" name="label_cdc">
         <property name="geometry">
          <rect>
-          <x>540</x>
-          <y>30</y>
+          <x>100</x>
+          <y>20</y>
           <width>181</width>
           <height>16</height>
          </rect>
@@ -481,32 +388,6 @@
          <enum>Qt::Vertical</enum>
         </property>
        </widget>
-       <widget class="QLineEdit" name="le_strategie_choisie_menu_start">
-        <property name="geometry">
-         <rect>
-          <x>430</x>
-          <y>110</y>
-          <width>113</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Strategie choisie :</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="le_etat_capteur_menu_start">
-        <property name="geometry">
-         <rect>
-          <x>440</x>
-          <y>270</y>
-          <width>113</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Etat capteurs :</string>
-        </property>
-       </widget>
        <widget class="QPushButton" name="btn_bleu_menu_start">
         <property name="geometry">
          <rect>
@@ -517,7 +398,7 @@
          </rect>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(0, 0, 255);
+         <string notr="true">background-color: rgb(107, 146, 255);
 border-color: rgb(0, 85, 255);</string>
         </property>
         <property name="text">
@@ -565,6 +446,32 @@ background-color: rgb(255, 237, 98);</string>
         </property>
         <property name="text">
          <string>GO !</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>430</x>
+          <y>270</y>
+          <width>81</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Etat capteurs :</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>430</x>
+          <y>100</y>
+          <width>81</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Autres info :</string>
         </property>
        </widget>
       </widget>
