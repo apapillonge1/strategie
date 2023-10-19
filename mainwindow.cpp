@@ -123,5 +123,4 @@ void MainWindow::add_to_test_list()
     //QListWidgetItem* item = new QListWidgetItem(ui->list_tests);
     //item->setSizeHint(customWidget->sizeHint());
     //ui->list_tests->setItemWidget(item, customWidget);
-
 }
