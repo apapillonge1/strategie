@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
     QImage image = QIcon(":/ressources/images/vinyles_table_2024_BETA.svg").pixmap(scene_rect.width(), scene_rect.height()).toImage();
     GameState::get()->playground().setBackgroundBrush(image);
 
+    nbrItemsListWidget = 0;
+
     ui->playground->scale(0.2, 0.2);
     ui->playground->setScene(&GameState::get()->playground());
 
@@ -19,10 +21,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->stackedWidget->setCurrentIndex(0); // index stack widget : (0: menu 1: 2: 3: map)
     connectButtons();
+    lecture_fichiers();
 }
 
 MainWindow::~MainWindow()
 {
+    ui->list_tests->clear();
     delete ui;
 }
 
@@ -40,8 +44,7 @@ void MainWindow::connectButtons()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
     connect(ui->btn_close_map_test, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->Tests); });
-    connect(ui->btn_start_tests, &QPushButton::clicked, this, [this]()
-            { ui->stackedWidget->setCurrentWidget(ui->map_test_2); });
+    connect(ui->btn_start_tests, &QPushButton::clicked, this, &MainWindow::afficher_fichiers);
 
     // stratégie connect
     connect(ui->btn_close_strategie, &QPushButton::clicked, this, [this]()
@@ -59,7 +62,84 @@ void MainWindow::connectButtons()
             { ui->stackedWidget->setCurrentWidget(ui->menu_start); });
     connect(ui->btn_start_map_start, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
+}
 
+class CustomListItemWidget : public QWidget
+{
+public:
+    CustomListItemWidget(const QString &labelText, QListWidget *parentListWidget) : QWidget(parentListWidget)
+    {
+        QHBoxLayout *layout = new QHBoxLayout(this);
+
+        QLabel *label = new QLabel(labelText, this);
+        layout->addWidget(label);
+
+        QPushButton *closeButton = new QPushButton("X", this);
+        layout->addWidget(closeButton);
+
+        // connect(closeButton, &QPushButton::clicked, [parentListWidget, this]() {
+        //     int index = parentListWidget->row((const QListWidgetItem*)(this));
+        //     if (index >= 0) {
+        //         QListWidgetItem* item = parentListWidget->takeItem(index);
+        //         delete item;
+        //     }
+        // });
+    }
+};
+
+void MainWindow::add_to_test_list()
+{
+    QPushButton *btn = static_cast<QPushButton *>(sender());
+    ui->list_tests->setDragEnabled(true);
+    ui->list_tests->setDragDropMode(QAbstractItemView::InternalMove);
+    ui->list_tests->setMinimumHeight(30);
+    QListWidgetItem *item = new QListWidgetItem(btn->text());
+    ui->list_tests->addItem(item);
+    std::cout << btn->text().toStdString() << std::endl;
+    nbrItemsListWidget += 1;
+    // Utilisation de la classe fonctionne pas encore
+
+    // CustomListItemWidget* customWidget = new CustomListItemWidget(btn->objectName(), ui->list_tests);
+    // QListWidgetItem* item = new QListWidgetItem(ui->list_tests);
+    // item->setSizeHint(customWidget->sizeHint());
+    // ui->list_tests->setItemWidget(item, customWidget);
+}
+
+void MainWindow::afficher_fichiers()
+{
+
+    std::cout << "----------------------------------" << std::endl;
+    if (nbrItemsListWidget <= 0)
+    {
+        std::cout << "Aucun Item dans la liste" << std::endl;
+    }
+    else
+    {
+        ui->stackedWidget->setCurrentWidget(ui->map_test_2);
+        for (int i = 0; i < nbrItemsListWidget; i++)
+        {
+            std::cout << "bonjour" << std::endl;
+            std::cout << "----------------------------------" << std::endl;
+            QString fileName = "../test_strat/" + ui->list_tests->item(i)->text();
+            std::cout << fileName.toStdString() << std::endl;
+            ui->list_map_test_2->addItem(ui->list_tests->item(i)->text());
+//            QFile file(fileName);
+//            file.open(QIODevice::ReadOnly);
+//            QByteArray data;
+
+//            while (!file.atEnd())
+//            {
+//                data = file.readLine();
+//                QString ligne(ui->list_tests->item(i)->text());
+//                std::cout << ligne.toStdString() << std::endl;
+//                ui->list_map_test_2->addItem(ligne);
+//            }
+        }
+    }
+}
+
+void MainWindow::lecture_fichiers()
+{
     // lecture du fichier et création de bouton avec leurs noms
     test_strat.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     test_strat.setSorting(QDir::Size | QDir::Reversed);
@@ -81,46 +161,9 @@ void MainWindow::connectButtons()
         if (fileInfo.completeSuffix() == "json")
         {
             QPushButton *btn_test = new QPushButton(fileInfo.fileName());
+            btn_test->setMinimumHeight(50);
             grid_test->addWidget(btn_test);
             connect(btn_test, &QPushButton::clicked, this, &MainWindow::add_to_test_list);
         }
     }
-}
-
-// Class pour ajout de la croix pas encore fonctionnel
-class CustomListItemWidget : public QWidget {
-public:
-    CustomListItemWidget(const QString& labelText, QListWidget* parentListWidget) : QWidget(parentListWidget) {
-        QHBoxLayout* layout = new QHBoxLayout(this);
-
-        QLabel* label = new QLabel(labelText, this);
-        layout->addWidget(label);
-
-        QPushButton* closeButton = new QPushButton("X", this);
-        layout->addWidget(closeButton);
-
-        //connect(closeButton, &QPushButton::clicked, [parentListWidget, this]() {
-        //    int index = parentListWidget->row((const QListWidgetItem*)(this));
-        //    if (index >= 0) {
-        //        QListWidgetItem* item = parentListWidget->takeItem(index);
-        //        delete item;
-        //    }
-        //});
-    }
-};
-
-void MainWindow::add_to_test_list()
-{
-    QPushButton *btn = static_cast<QPushButton *>(sender());
-    ui->list_tests->setDragEnabled(true);
-    ui->list_tests->setDragDropMode(QAbstractItemView::InternalMove);
-    ui->list_tests->addItem(btn->text());
-    std::cout << btn->text().toStdString() << std::endl;
-
-    //Utilisation de la classe fonctionne pas encore
-
-    //CustomListItemWidget* customWidget = new CustomListItemWidget(btn->objectName(), ui->list_tests);
-    //QListWidgetItem* item = new QListWidgetItem(ui->list_tests);
-    //item->setSizeHint(customWidget->sizeHint());
-    //ui->list_tests->setItemWidget(item, customWidget);
 }

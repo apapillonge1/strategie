@@ -29,9 +29,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 #IUT CONFIG
 
-#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VRAC_eurobot_sdk-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/release/ -lVRAC_eurobot_sdk
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-VRAC_eurobot_sdk-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/debug/ -lVRAC_eurobot_sdk
-#else:unix: LIBS += -L$$PWD/../build-VRAC_eurobot_sdk-Desktop_Qt_6_6_0_MinGW_64_bit-Debug/ -lVRAC_eurobot_sdk
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-VRAC_eurobot_sdk-Desktop_Qt_6_5_3_MinGW_64_bit-Debug/release/ -lVRAC_eurobot_sdk
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-VRAC_eurobot_sdk-Desktop_Qt_6_5_3_MinGW_64_bit-Debug/debug/ -lVRAC_eurobot_sdk
+#else:unix: LIBS += -L$$PWD/../build-VRAC_eurobot_sdk-Desktop_Qt_6_5_3_MinGW_64_bit-Debug/ -lVRAC_eurobot_sdk
 
 #INCLUDEPATH += $$PWD/../VRAC_sdk
 #DEPENDPATH += $$PWD/../VRAC_sdk

@@ -28,7 +28,7 @@
 background-color: rgb(213, 237, 255);</string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="menu">
        <widget class="QLabel" name="label_infos_menu">
@@ -154,7 +154,15 @@ background-color: rgb(213, 237, 255);</string>
           <height>351</height>
          </rect>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
+        <property name="isWrapping" stdset="0">
          <bool>false</bool>
         </property>
        </widget>
@@ -210,6 +218,11 @@ background-color: rgb(213, 237, 255);</string>
           <width>161</width>
           <height>221</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
         </property>
        </widget>
       </widget>
