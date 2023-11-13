@@ -113,6 +113,12 @@ background-color: rgb(213, 237, 255);</string>
         <property name="acceptDrops">
          <bool>false</bool>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::HLine</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
@@ -121,8 +127,8 @@ background-color: rgb(213, 237, 255);</string>
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>489</width>
-           <height>439</height>
+           <width>487</width>
+           <height>437</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout">
@@ -151,11 +157,24 @@ background-color: rgb(213, 237, 255);</string>
           <x>550</x>
           <y>10</y>
           <width>231</width>
-          <height>351</height>
+          <height>291</height>
          </rect>
         </property>
         <property name="acceptDrops">
          <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btn_suppr_tests">
+        <property name="geometry">
+         <rect>
+          <x>550</x>
+          <y>310</y>
+          <width>101</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>SUPPRIMER</string>
         </property>
        </widget>
       </widget>

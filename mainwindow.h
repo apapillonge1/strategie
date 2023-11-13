@@ -27,6 +27,10 @@ public slots:
 
     void connectButtons(void);
 
+    void on_btn_suppr_test_clicked(void);
+
+private slots:
+
 private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;

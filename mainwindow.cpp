@@ -42,6 +42,7 @@ void MainWindow::connectButtons()
             { ui->stackedWidget->setCurrentWidget(ui->Tests); });
     connect(ui->btn_start_tests, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->map_test_2); });
+    connect(ui->btn_suppr_tests, &QPushButton::clicked, this, &MainWindow::on_btn_suppr_test_clicked);
 
     // stratégie connect
     connect(ui->btn_close_strategie, &QPushButton::clicked, this, [this]()
@@ -81,6 +82,7 @@ void MainWindow::connectButtons()
         if (fileInfo.completeSuffix() == "json")
         {
             QPushButton *btn_test = new QPushButton(fileInfo.fileName());
+            btn_test->setFixedHeight(75);
             grid_test->addWidget(btn_test);
             connect(btn_test, &QPushButton::clicked, this, &MainWindow::add_to_test_list);
         }
@@ -114,8 +116,12 @@ void MainWindow::add_to_test_list()
     QPushButton *btn = static_cast<QPushButton *>(sender());
     ui->list_tests->setDragEnabled(true);
     ui->list_tests->setDragDropMode(QAbstractItemView::InternalMove);
-    ui->list_tests->addItem(btn->text());
+    ui->list_tests->setAcceptDrops(true);
+    QListWidgetItem *item = new QListWidgetItem(btn->text());
+    ui->list_tests->addItem(item);
+    //ui->list_tests->addItem(btn->text());
     std::cout << btn->text().toStdString() << std::endl;
+
 
     //Utilisation de la classe fonctionne pas encore
 
@@ -124,3 +130,16 @@ void MainWindow::add_to_test_list()
     //item->setSizeHint(customWidget->sizeHint());
     //ui->list_tests->setItemWidget(item, customWidget);
 }
+
+void MainWindow::on_btn_suppr_test_clicked()
+{
+    foreach (QListWidgetItem *ligne, ui->list_tests->selectedItems())
+    {
+        delete ui->list_tests->takeItem(ui->list_tests->row(ligne));
+    }
+}
+
+
+
+
+
