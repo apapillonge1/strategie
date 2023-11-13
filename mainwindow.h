@@ -27,14 +27,24 @@ public slots:
 
     void connectButtons(void);
 
-    void on_btn_suppr_test_clicked(void);
 
 private slots:
+
+    void on_btn_suppr_test_clicked(void);
+
+    void fctn_btn_close_map_test(void);
+
+    void lecture_fichiers(void);
+
+    void afficher_fichiers(void);
+
 
 private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;
     QTimer *timer;
     QDir test_strat;
+    int nbrItemsListWidget;
+
 };
 #endif // MAINWINDOW_H
