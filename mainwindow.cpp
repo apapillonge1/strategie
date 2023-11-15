@@ -130,7 +130,6 @@ void MainWindow::fctn_btn_close_map_test()
 {
     ui->stackedWidget->setCurrentWidget(ui->Tests);
     ui->list_map_test_2->clear();
-    nbrItemsListWidget --;
 }
 
 void MainWindow::on_btn_suppr_test_clicked()
@@ -138,6 +137,7 @@ void MainWindow::on_btn_suppr_test_clicked()
     foreach (QListWidgetItem *ligne, ui->list_tests->selectedItems())
     {
         delete ui->list_tests->takeItem(ui->list_tests->row(ligne));
+        nbrItemsListWidget --;
     }
 }
 
