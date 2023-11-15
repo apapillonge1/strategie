@@ -3,10 +3,11 @@
 #include "gamestate.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), stackedWidget(new QStackedWidget), test_strat("./../test_strat")
+    : QMainWindow(parent), ui(new Ui::MainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"),strat_dir("./../strats")
 {
 
     nbrItemsListWidget = 0;
+    nbrStrategies = 0;
     ui->setupUi(this);
     QRectF scene_rect(0, 0, 3000, 2000);
     GameState::get()->playground().setSceneRect(scene_rect);
@@ -65,8 +66,8 @@ void MainWindow::connectButtons()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
 
     // lecture du fichier et création de bouton avec leurs noms
-    test_strat.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-    test_strat.setSorting(QDir::Size | QDir::Reversed);
+    test_strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    test_strat_dir.setSorting(QDir::Size | QDir::Reversed);
 
     QWidget *client = new QWidget(this);
     QGridLayout *grid_test = new QGridLayout(client);
@@ -74,7 +75,7 @@ void MainWindow::connectButtons()
 
     ui->scrollArea->setWidget(client);
 
-    QFileInfoList list = test_strat.entryInfoList();
+    QFileInfoList list = test_strat_dir.entryInfoList();
     std::cout << "fichier present : " << std::endl;
 
     for (int i = 0; i < list.size(); ++i)
@@ -91,28 +92,6 @@ void MainWindow::connectButtons()
         }
     }
 }
-
-// Class pour ajout de la croix pas encore fonctionnel
-class CustomListItemWidget : public QWidget {
-public:
-    CustomListItemWidget(const QString& labelText, QListWidget* parentListWidget) : QWidget(parentListWidget) {
-        QHBoxLayout* layout = new QHBoxLayout(this);
-
-        QLabel* label = new QLabel(labelText, this);
-        layout->addWidget(label);
-
-        QPushButton* closeButton = new QPushButton("X", this);
-        layout->addWidget(closeButton);
-
-        //connect(closeButton, &QPushButton::clicked, [parentListWidget, this]() {
-        //    int index = parentListWidget->row((const QListWidgetItem*)(this));
-        //    if (index >= 0) {
-        //        QListWidgetItem* item = parentListWidget->takeItem(index);
-        //        delete item;
-        //    }
-        //});
-    }
-};
 
 void MainWindow::add_to_test_list()
 {
@@ -164,13 +143,14 @@ void MainWindow::afficher_fichiers()
 void MainWindow::lecture_fichiers()
 {
     // lecture du fichier et création de bouton avec leurs noms
-    test_strat.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-    test_strat.setSorting(QDir::Size | QDir::Reversed);
+    test_strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    test_strat_dir.setSorting(QDir::Size | QDir::Reversed);
+
     QWidget *client = new QWidget(this);
     QGridLayout *grid_test = new QGridLayout(client);
     client->setLayout(grid_test);
     ui->scrollArea->setWidget(client);
-    QFileInfoList list = test_strat.entryInfoList();
+    QFileInfoList list = test_strat_dir.entryInfoList();
     std::cout << "fichier present : " << std::endl;
     for (int i = 0; i < list.size(); ++i)
     {
@@ -185,10 +165,33 @@ void MainWindow::lecture_fichiers()
             connect(btn_test, &QPushButton::clicked, this, &MainWindow::add_to_test_list);
         }
     }
+
+    strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    strat_dir.setSorting(QDir::Size | QDir::Reversed);
+    QWidget *client2 = new QWidget(this);
+    QGridLayout *grid_strat = new QGridLayout(client2);
+    client2->setLayout(grid_strat);
+    ui->scrollArea_2->setWidget(client2);
+    QFileInfoList list2 = strat_dir.entryInfoList();
+    for (int i = 0; i < list2.size(); ++i)
+    {
+        QFileInfo fileInfo2 = list2.at(i);
+        std::cout << qPrintable(QString("%1 %2").arg(fileInfo2.size(), 10).arg(fileInfo2.fileName()));
+        std::cout << std::endl;
+        if (fileInfo2.completeSuffix() == "json")
+        {
+            QPushButton *btn_test = new QPushButton(fileInfo2.fileName());
+            btn_test->setMinimumHeight(50);
+            grid_strat->addWidget(btn_test);
+            connect(btn_test, &QPushButton::clicked, this, &MainWindow::select_strat);
+            nbrStrategies++;
+        }
+    }
 }
 
-
-
-
-
-
+void MainWindow::select_strat(void)
+{
+    QPushButton *btn = static_cast<QPushButton *>(sender());
+    btn->setStyleSheet("background-color: rgb(255,255,0);");
+    btn->setDown(true);
+}

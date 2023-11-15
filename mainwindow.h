@@ -38,13 +38,17 @@ private slots:
 
     void afficher_fichiers(void);
 
+    void select_strat(void);
+
 
 private:
     Ui::MainWindow *ui;
     QStackedWidget *stackedWidget;
     QTimer *timer;
-    QDir test_strat;
+    QDir test_strat_dir;
+    QDir strat_dir;
     int nbrItemsListWidget;
+    int nbrStrategies;
 
 };
 #endif // MAINWINDOW_H
