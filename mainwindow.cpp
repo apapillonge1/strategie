@@ -3,31 +3,34 @@
 #include "gamestate.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"),strat_dir("./../strats")
+    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"),strat_dir("./../strats"),
+    mapHeight(2000), mapLength(3000), btnHeight(75), mapScale(0.2)
 {
 
     nbrItemsListWidget = 0;
-    nbrStrategies = 0;
+    strategyNbrs = 0;
     ui->setupUi(this);
-    QRectF scene_rect(0, 0, 3000, 2000);
+    QRectF scene_rect(0, 0, mapLength, mapHeight);
     GameState::get()->playground().setSceneRect(scene_rect);
     QImage image = QIcon(":/ressources/images/vinyles_table_2024_BETA.svg").pixmap(scene_rect.width(), scene_rect.height()).toImage();
     GameState::get()->playground().setBackgroundBrush(image);
+    button_group.setExclusive(true);
 
-    ui->playground->scale(0.2, 0.2);
+    ui->playground->scale(mapScale, mapScale);
     ui->playground->setScene(&GameState::get()->playground());
 
-    ui->playground_test->scale(0.2, 0.2);
+    ui->playground_test->scale(mapScale, mapScale);
     ui->playground_test->setScene(&GameState::get()->playground());
 
-    ui->stackedWidget->setCurrentIndex(0); // index stack widget : (0: menu 1: 2: 3: map)
+    ui->stackedWidget->setCurrentWidget(ui->menu);
     connectButtons();
-    lecture_fichiers();
+    readTestFiles();
 }
 
 MainWindow::~MainWindow()
 {
     ui->list_tests->clear();
+    qDeleteAll(button_group.buttons());
     delete ui;
 }
 
@@ -36,28 +39,27 @@ void MainWindow::connectButtons()
     // menu connect
 
     connect(ui->btn_start_menu, &QPushButton::clicked, this, [this]()
-            { ui->stackedWidget->setCurrentWidget(ui->strategie); });
+            { ui->stackedWidget->setCurrentWidget(ui->strategy); });
     connect(ui->btn_tests_menu, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->Tests); });
 
     // test connect
     connect(ui->btn_close_tests, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
-    connect(ui->btn_close_map_test, &QPushButton::clicked, this, &MainWindow::fctn_btn_close_map_test);
-    connect(ui->btn_start_tests, &QPushButton::clicked, this, &MainWindow::afficher_fichiers);
+    connect(ui->btn_close_map_test, &QPushButton::clicked, this, &MainWindow::btn_close_map_test);
+    connect(ui->btn_start_tests, &QPushButton::clicked, this, &MainWindow::showTestFiles);
     connect(ui->btn_suppr_tests, &QPushButton::clicked, this, &MainWindow::on_btn_suppr_test_clicked);
 
 
-    // stratégie connect
-    connect(ui->btn_close_strategie, &QPushButton::clicked, this, [this]()
+    // strategy connect
+    connect(ui->btn_strategy_close, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
-    connect(ui->btn_start_strategie, &QPushButton::clicked, this, [this]()
-            { ui->stackedWidget->setCurrentWidget(ui->menu_start); });
+    connect(ui->btn_strategy_start, &QPushButton::clicked, this, &MainWindow::readStrategyFiles);
 
     // start connect
 
     connect(ui->btn_close_menu_start, &QPushButton::clicked, this, [this]()
-            { ui->stackedWidget->setCurrentWidget(ui->strategie); });
+            { ui->stackedWidget->setCurrentWidget(ui->strategy); });
     connect(ui->btn_go_menu_start, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->map_start); });
     connect(ui->btn_close_map_start, &QPushButton::clicked, this, [this]()
@@ -65,28 +67,27 @@ void MainWindow::connectButtons()
     connect(ui->btn_start_map_start, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
 
-    // lecture du fichier et création de bouton avec leurs noms
+    // read files and create buttons with their name
     test_strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     test_strat_dir.setSorting(QDir::Size | QDir::Reversed);
 
-    QWidget *client = new QWidget(this);
+    QWidget *client = new QWidget(this);                //memory leak
     QGridLayout *grid_test = new QGridLayout(client);
     client->setLayout(grid_test);
 
     ui->scrollArea->setWidget(client);
 
     QFileInfoList list = test_strat_dir.entryInfoList();
-    std::cout << "fichier present : " << std::endl;
+    std::cout << "Existing files : " << std::endl;
 
-    for (int i = 0; i < list.size(); ++i)
+    for (const auto & fileInfo : list)
     {
-        QFileInfo fileInfo = list.at(i);
         std::cout << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10).arg(fileInfo.fileName()));
         std::cout << std::endl;
         if (fileInfo.completeSuffix() == "json")
         {
             QPushButton *btn_test = new QPushButton(fileInfo.fileName());
-            btn_test->setFixedHeight(75);
+            btn_test->setFixedHeight(btnHeight);
             grid_test->addWidget(btn_test);
             connect(btn_test, &QPushButton::clicked, this, &MainWindow::add_to_test_list);
         }
@@ -98,14 +99,14 @@ void MainWindow::add_to_test_list()
     QPushButton *btn = static_cast<QPushButton *>(sender());
     ui->list_tests->setDragEnabled(true);
     ui->list_tests->setDragDropMode(QAbstractItemView::InternalMove);
-    ui->list_tests->setMinimumHeight(30);
-    QListWidgetItem *item = new QListWidgetItem(btn->text());
+    ui->list_tests->setMinimumHeight(btnHeight);
+    QListWidgetItem *item = new QListWidgetItem(btn->text());                   //memory leak
     ui->list_tests->addItem(item);
     std::cout << btn->text().toStdString() << std::endl;
-    nbrItemsListWidget += 1;
+    nbrItemsListWidget++;
 }
 
-void MainWindow::fctn_btn_close_map_test()
+void MainWindow::btn_close_map_test()
 {
     ui->stackedWidget->setCurrentWidget(ui->Tests);
     ui->list_map_test_2->clear();
@@ -120,27 +121,35 @@ void MainWindow::on_btn_suppr_test_clicked()
     }
 }
 
-void MainWindow::afficher_fichiers()
+void MainWindow::showTestFiles()
 {
     std::cout << "----------------------------------" << std::endl;
     if (nbrItemsListWidget <= 0)
     {
-        std::cout << "Aucun Item dans la liste" << std::endl;
+        std::cout << "No item in the list" << std::endl;
+        return;
     }
-    else
+    ui->stackedWidget->setCurrentWidget(ui->map_test_2);
+    for (int i = 0; i <ui->list_tests->count(); i++)
     {
-        ui->stackedWidget->setCurrentWidget(ui->map_test_2);
-        for (int i = 0; i < nbrItemsListWidget; i++)
-        {
-            std::cout << "bonjour" << std::endl;
-            std::cout << "----------------------------------" << std::endl;
-            QString fileName = "../test_strat/" + ui->list_tests->item(i)->text();
-            std::cout << fileName.toStdString() << std::endl;
-            ui->list_map_test_2->addItem(ui->list_tests->item(i)->text());
-        }
+        std::cout << "Hello" << std::endl;
+        std::cout << "----------------------------------" << std::endl;
+        QString fileName = "../test_strat/" + ui->list_tests->item(i)->text();
+        std::cout << fileName.toStdString() << std::endl;
+        ui->list_map_test_2->addItem(ui->list_tests->item(i)->text());
     }
 }
-void MainWindow::lecture_fichiers()
+
+void MainWindow::readStrategyFiles()
+{
+    if(button_group.checkedId()!= -1)
+    {
+        ui->stackedWidget->setCurrentWidget(ui->menu_start);
+        return;
+    }
+    std::cout << "No checked strategy "<< std::endl;
+}
+void MainWindow::readTestFiles()
 {
     // lecture du fichier et création de bouton avec leurs noms
     test_strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
@@ -151,7 +160,7 @@ void MainWindow::lecture_fichiers()
     client->setLayout(grid_test);
     ui->scrollArea->setWidget(client);
     QFileInfoList list = test_strat_dir.entryInfoList();
-    std::cout << "fichier present : " << std::endl;
+    std::cout << "Existing files : " << std::endl;
     for (int i = 0; i < list.size(); ++i)
     {
         QFileInfo fileInfo = list.at(i);
@@ -159,8 +168,8 @@ void MainWindow::lecture_fichiers()
         std::cout << std::endl;
         if (fileInfo.completeSuffix() == "json")
         {
-            QPushButton *btn_test = new QPushButton(fileInfo.fileName());
-            btn_test->setMinimumHeight(50);
+            QPushButton *btn_test = new QPushButton(fileInfo.fileName());              //memory
+            btn_test->setMinimumHeight(btnHeight);
             grid_test->addWidget(btn_test);
             connect(btn_test, &QPushButton::clicked, this, &MainWindow::add_to_test_list);
         }
@@ -168,30 +177,28 @@ void MainWindow::lecture_fichiers()
 
     strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     strat_dir.setSorting(QDir::Size | QDir::Reversed);
-    QWidget *client2 = new QWidget(this);
+    QWidget *client2 = new QWidget(this);                       //memory leak
     QGridLayout *grid_strat = new QGridLayout(client2);
     client2->setLayout(grid_strat);
     ui->scrollArea_2->setWidget(client2);
     QFileInfoList list2 = strat_dir.entryInfoList();
-    for (int i = 0; i < list2.size(); ++i)
+    for (const auto &fileInfo2 : list2)
     {
-        QFileInfo fileInfo2 = list2.at(i);
         std::cout << qPrintable(QString("%1 %2").arg(fileInfo2.size(), 10).arg(fileInfo2.fileName()));
         std::cout << std::endl;
         if (fileInfo2.completeSuffix() == "json")
         {
-            QPushButton *btn_test = new QPushButton(fileInfo2.fileName());
-            btn_test->setMinimumHeight(50);
+            QPushButton *btn_test = new QPushButton(fileInfo2.fileName());                      //memory leak
+            btn_test->setMinimumHeight(btnHeight);
+            btn_test->setStyleSheet("QPushButton::checked{background-color: rgb(0,255,0);}");
+            btn_test->setCheckable(true);
             grid_strat->addWidget(btn_test);
-            connect(btn_test, &QPushButton::clicked, this, &MainWindow::select_strat);
-            nbrStrategies++;
+            button_group.addButton(btn_test);
+            std::cout <<button_group.id(btn_test) << std::endl;
+
+            strategyNbrs++;
         }
     }
+
 }
 
-void MainWindow::select_strat(void)
-{
-    QPushButton *btn = static_cast<QPushButton *>(sender());
-    btn->setStyleSheet("background-color: rgb(255,255,0);");
-    btn->setDown(true);
-}
