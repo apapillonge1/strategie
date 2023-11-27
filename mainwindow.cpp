@@ -22,6 +22,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->playground_test->scale(mapScale, mapScale);
     ui->playground_test->setScene(&GameState::get()->playground());
 
+    ui->btn_blue_menu_start->setCheckable(true);
+    ui->btn_yellow_menu_start->setCheckable(true);
+    ui->btn_blue_menu_start->setStyleSheet("QPushButton::checked{background-color: rgb(0,0,255);}");
+    ui->btn_yellow_menu_start->setStyleSheet("QPushButton::checked{background-color: rgb(255,255,0);}");
+    teamChoice.addButton(ui->btn_blue_menu_start);
+    teamChoice.addButton(ui->btn_yellow_menu_start);
+    teamChoice.setExclusive(true);
+
     ui->stackedWidget->setCurrentWidget(ui->menu);
     connectButtons();
     readTestFiles();
@@ -30,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     ui->list_tests->clear();
-    qDeleteAll(button_group.buttons());
+    memory_vector.clear();
     delete ui;
 }
 
@@ -60,8 +68,7 @@ void MainWindow::connectButtons()
 
     connect(ui->btn_close_menu_start, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->strategy); });
-    connect(ui->btn_go_menu_start, &QPushButton::clicked, this, [this]()
-            { ui->stackedWidget->setCurrentWidget(ui->map_start); });
+    connect(ui->btn_go_menu_start, &QPushButton::clicked, this, &MainWindow::enable_go_button);
     connect(ui->btn_close_map_start, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu_start); });
     connect(ui->btn_start_map_start, &QPushButton::clicked, this, [this]()
@@ -72,7 +79,9 @@ void MainWindow::connectButtons()
     test_strat_dir.setSorting(QDir::Size | QDir::Reversed);
 
     QWidget *client = new QWidget(this);                //memory leak
+    memory_vector.push_back(client);
     QGridLayout *grid_test = new QGridLayout(client);
+    memory_vector.push_back(grid_test);
     client->setLayout(grid_test);
 
     ui->scrollArea->setWidget(client);
@@ -87,6 +96,7 @@ void MainWindow::connectButtons()
         if (fileInfo.completeSuffix() == "json")
         {
             QPushButton *btn_test = new QPushButton(fileInfo.fileName());
+            memory_vector.push_back(btn_test);
             btn_test->setFixedHeight(btnHeight);
             grid_test->addWidget(btn_test);
             connect(btn_test, &QPushButton::clicked, this, &MainWindow::add_to_test_list);
@@ -101,6 +111,7 @@ void MainWindow::add_to_test_list()
     ui->list_tests->setDragDropMode(QAbstractItemView::InternalMove);
     ui->list_tests->setMinimumHeight(btnHeight);
     QListWidgetItem *item = new QListWidgetItem(btn->text());                   //memory leak
+    memory_vector.push_back((QObject*)item);
     ui->list_tests->addItem(item);
     std::cout << btn->text().toStdString() << std::endl;
     nbrItemsListWidget++;
@@ -156,7 +167,10 @@ void MainWindow::readTestFiles()
     test_strat_dir.setSorting(QDir::Size | QDir::Reversed);
 
     QWidget *client = new QWidget(this);
+    memory_vector.push_back(client);
+
     QGridLayout *grid_test = new QGridLayout(client);
+    memory_vector.push_back(grid_test);
     client->setLayout(grid_test);
     ui->scrollArea->setWidget(client);
     QFileInfoList list = test_strat_dir.entryInfoList();
@@ -169,6 +183,7 @@ void MainWindow::readTestFiles()
         if (fileInfo.completeSuffix() == "json")
         {
             QPushButton *btn_test = new QPushButton(fileInfo.fileName());              //memory
+            memory_vector.push_back(btn_test);
             btn_test->setMinimumHeight(btnHeight);
             grid_test->addWidget(btn_test);
             connect(btn_test, &QPushButton::clicked, this, &MainWindow::add_to_test_list);
@@ -178,7 +193,9 @@ void MainWindow::readTestFiles()
     strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     strat_dir.setSorting(QDir::Size | QDir::Reversed);
     QWidget *client2 = new QWidget(this);                       //memory leak
+    memory_vector.push_back(client2);
     QGridLayout *grid_strat = new QGridLayout(client2);
+    memory_vector.push_back(grid_strat);
     client2->setLayout(grid_strat);
     ui->scrollArea_2->setWidget(client2);
     QFileInfoList list2 = strat_dir.entryInfoList();
@@ -189,6 +206,7 @@ void MainWindow::readTestFiles()
         if (fileInfo2.completeSuffix() == "json")
         {
             QPushButton *btn_test = new QPushButton(fileInfo2.fileName());                      //memory leak
+            memory_vector.push_back(btn_test);
             btn_test->setMinimumHeight(btnHeight);
             btn_test->setStyleSheet("QPushButton::checked{background-color: rgb(0,255,0);}");
             btn_test->setCheckable(true);
@@ -199,6 +217,14 @@ void MainWindow::readTestFiles()
             strategyNbrs++;
         }
     }
-
 }
 
+void MainWindow::enable_go_button(void)
+{
+    if(teamChoice.checkedId() == -1)
+    {
+        ui->btn_go_menu_start->setStyleSheet("QPushButton::checked{background-color: rgb(192,192,192);}");
+        return;
+    }
+    ui->stackedWidget->setCurrentWidget(ui->map_start);
+}

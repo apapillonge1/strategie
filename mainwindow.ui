@@ -28,7 +28,7 @@
 background-color: rgb(213, 237, 255);</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="menu">
        <widget class="QLabel" name="label_infos_menu">
@@ -347,7 +347,7 @@ background-color: rgb(213, 237, 255);</string>
          <enum>Qt::Vertical</enum>
         </property>
        </widget>
-       <widget class="QPushButton" name="btn_bleu_menu_start">
+       <widget class="QPushButton" name="btn_blue_menu_start">
         <property name="geometry">
          <rect>
           <x>30</x>
@@ -363,7 +363,7 @@ background-color: rgb(213, 237, 255);</string>
          <string>BLEU</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="btn_jaune_menu_start">
+       <widget class="QPushButton" name="btn_yellow_menu_start">
         <property name="geometry">
          <rect>
           <x>30</x>

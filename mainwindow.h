@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QDir>
 #include <QButtonGroup>
+#include <QVector>
 #include <iostream>
 
 QT_BEGIN_NAMESPACE
@@ -41,6 +42,7 @@ private slots:
 
     void readStrategyFiles(void);
 
+    void enable_go_button(void);
 
 private:
     Ui::mainWindow *ui;
@@ -49,12 +51,14 @@ private:
     QDir test_strat_dir;
     QDir strat_dir;
     QButtonGroup button_group;
+    QButtonGroup teamChoice;
     int nbrItemsListWidget;
     int strategyNbrs;
     int btnHeight;
     int mapHeight;
     int mapLength;
     int mapScale;
+    QVector <QObject*> memory_vector;
 
 };
 #endif // MAINWINDOW_H
