@@ -78,7 +78,7 @@ void MainWindow::connectButtons()
     test_strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     test_strat_dir.setSorting(QDir::Size | QDir::Reversed);
 
-    QWidget *client = new QWidget(this);                //memory leak
+    QWidget *client = new QWidget(this);
     memory_vector.push_back(client);
     QGridLayout *grid_test = new QGridLayout(client);
     memory_vector.push_back(grid_test);
@@ -110,7 +110,7 @@ void MainWindow::add_to_test_list()
     ui->list_tests->setDragEnabled(true);
     ui->list_tests->setDragDropMode(QAbstractItemView::InternalMove);
     ui->list_tests->setMinimumHeight(btnHeight);
-    QListWidgetItem *item = new QListWidgetItem(btn->text());                   //memory leak
+    QListWidgetItem *item = new QListWidgetItem(btn->text());
     memory_vector.push_back((QObject*)item);
     ui->list_tests->addItem(item);
     std::cout << btn->text().toStdString() << std::endl;
@@ -182,7 +182,7 @@ void MainWindow::readTestFiles()
         std::cout << std::endl;
         if (fileInfo.completeSuffix() == "json")
         {
-            QPushButton *btn_test = new QPushButton(fileInfo.fileName());              //memory
+            QPushButton *btn_test = new QPushButton(fileInfo.fileName());
             memory_vector.push_back(btn_test);
             btn_test->setMinimumHeight(btnHeight);
             grid_test->addWidget(btn_test);
@@ -192,7 +192,7 @@ void MainWindow::readTestFiles()
 
     strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     strat_dir.setSorting(QDir::Size | QDir::Reversed);
-    QWidget *client2 = new QWidget(this);                       //memory leak
+    QWidget *client2 = new QWidget(this);
     memory_vector.push_back(client2);
     QGridLayout *grid_strat = new QGridLayout(client2);
     memory_vector.push_back(grid_strat);
@@ -205,7 +205,7 @@ void MainWindow::readTestFiles()
         std::cout << std::endl;
         if (fileInfo2.completeSuffix() == "json")
         {
-            QPushButton *btn_test = new QPushButton(fileInfo2.fileName());                      //memory leak
+            QPushButton *btn_test = new QPushButton(fileInfo2.fileName());
             memory_vector.push_back(btn_test);
             btn_test->setMinimumHeight(btnHeight);
             btn_test->setStyleSheet("QPushButton::checked{background-color: rgb(0,255,0);}");
