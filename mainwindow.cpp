@@ -1,25 +1,26 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "gamestate.h"
+#include "utility.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"),strat_dir("./../strats"),
-    mapHeight(2000), mapLength(3000), btnHeight(75), mapScale(0.2)
+    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"),strat_dir("./../strats")
 {
 
     nbrItemsListWidget = 0;
     strategyNbrs = 0;
     ui->setupUi(this);
-    QRectF scene_rect(0, 0, mapLength, mapHeight);
+    QRectF scene_rect(0, 0, MAPLENGTH, MAPHEIGHT);
     GameState::get()->playground().setSceneRect(scene_rect);
     QImage image = QIcon(":/ressources/images/vinyles_table_2024_BETA.svg").pixmap(scene_rect.width(), scene_rect.height()).toImage();
     GameState::get()->playground().setBackgroundBrush(image);
     button_group.setExclusive(true);
 
-    ui->playground->scale(mapScale, mapScale);
+    ui->playground->scale(MAPSCALE, MAPSCALE);
     ui->playground->setScene(&GameState::get()->playground());
 
-    ui->playground_test->scale(mapScale, mapScale);
+    ui->playground_test->scale(MAPSCALE, MAPSCALE);
     ui->playground_test->setScene(&GameState::get()->playground());
 
     ui->btn_blue_menu_start->setCheckable(true);
@@ -38,7 +39,30 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     ui->list_tests->clear();
-    memory_vector.clear();
+
+    for (auto element : push_button_vector)
+    {
+        delete element;
+    }
+    push_button_vector.clear();
+
+    for (auto element : widget_vector)
+    {
+        delete element;
+    }
+    widget_vector.clear();
+
+    for (auto element : list_widget_item_vector)
+    {
+        delete element;
+    }
+    list_widget_item_vector.clear();
+
+    for (auto element : grid_layout_vector)
+    {
+        delete element;
+    }
+    grid_layout_vector.clear();
     delete ui;
 }
 
@@ -46,15 +70,14 @@ void MainWindow::connectButtons()
 {
     // menu connect
 
-    connect(ui->btn_start_menu, &QPushButton::clicked, this, [this]()
-            { ui->stackedWidget->setCurrentWidget(ui->strategy); });
+    connect(ui->btn_start_menu, &QPushButton::clicked, this, &MainWindow::go_to_strategy);
     connect(ui->btn_tests_menu, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->Tests); });
 
     // test connect
     connect(ui->btn_close_tests, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
-    connect(ui->btn_close_map_test, &QPushButton::clicked, this, &MainWindow::btn_close_map_test);
+    connect(ui->btn_close_map_test, &QPushButton::clicked, this, &MainWindow::go_to_test);
     connect(ui->btn_start_tests, &QPushButton::clicked, this, &MainWindow::showTestFiles);
     connect(ui->btn_suppr_tests, &QPushButton::clicked, this, &MainWindow::on_btn_suppr_test_clicked);
 
@@ -62,46 +85,16 @@ void MainWindow::connectButtons()
     // strategy connect
     connect(ui->btn_strategy_close, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
-    connect(ui->btn_strategy_start, &QPushButton::clicked, this, &MainWindow::readStrategyFiles);
+    connect(ui->btn_strategy_start, &QPushButton::clicked, this, &MainWindow::launchSelectedStrategy);
 
     // start connect
 
-    connect(ui->btn_close_menu_start, &QPushButton::clicked, this, [this]()
-            { ui->stackedWidget->setCurrentWidget(ui->strategy); });
+    connect(ui->btn_close_menu_start, &QPushButton::clicked, this, &MainWindow::go_to_strategy);
     connect(ui->btn_go_menu_start, &QPushButton::clicked, this, &MainWindow::enable_go_button);
     connect(ui->btn_close_map_start, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu_start); });
     connect(ui->btn_start_map_start, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
-
-    // read files and create buttons with their name
-    test_strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-    test_strat_dir.setSorting(QDir::Size | QDir::Reversed);
-
-    QWidget *client = new QWidget(this);
-    memory_vector.push_back(client);
-    QGridLayout *grid_test = new QGridLayout(client);
-    memory_vector.push_back(grid_test);
-    client->setLayout(grid_test);
-
-    ui->scrollArea->setWidget(client);
-
-    QFileInfoList list = test_strat_dir.entryInfoList();
-    std::cout << "Existing files : " << std::endl;
-
-    for (const auto & fileInfo : list)
-    {
-        std::cout << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10).arg(fileInfo.fileName()));
-        std::cout << std::endl;
-        if (fileInfo.completeSuffix() == "json")
-        {
-            QPushButton *btn_test = new QPushButton(fileInfo.fileName());
-            memory_vector.push_back(btn_test);
-            btn_test->setFixedHeight(btnHeight);
-            grid_test->addWidget(btn_test);
-            connect(btn_test, &QPushButton::clicked, this, &MainWindow::add_to_test_list);
-        }
-    }
 }
 
 void MainWindow::add_to_test_list()
@@ -109,18 +102,12 @@ void MainWindow::add_to_test_list()
     QPushButton *btn = static_cast<QPushButton *>(sender());
     ui->list_tests->setDragEnabled(true);
     ui->list_tests->setDragDropMode(QAbstractItemView::InternalMove);
-    ui->list_tests->setMinimumHeight(btnHeight);
+    ui->list_tests->setMinimumHeight(BTNHEIGHT);
     QListWidgetItem *item = new QListWidgetItem(btn->text());
-    memory_vector.push_back((QObject*)item);
+    list_widget_item_vector.push_back(item);
     ui->list_tests->addItem(item);
     std::cout << btn->text().toStdString() << std::endl;
     nbrItemsListWidget++;
-}
-
-void MainWindow::btn_close_map_test()
-{
-    ui->stackedWidget->setCurrentWidget(ui->Tests);
-    ui->list_map_test_2->clear();
 }
 
 void MainWindow::on_btn_suppr_test_clicked()
@@ -151,7 +138,7 @@ void MainWindow::showTestFiles()
     }
 }
 
-void MainWindow::readStrategyFiles()
+void MainWindow::launchSelectedStrategy()
 {
     if(button_group.checkedId()!= -1)
     {
@@ -167,10 +154,10 @@ void MainWindow::readTestFiles()
     test_strat_dir.setSorting(QDir::Size | QDir::Reversed);
 
     QWidget *client = new QWidget(this);
-    memory_vector.push_back(client);
+    widget_vector.push_back(client);
 
     QGridLayout *grid_test = new QGridLayout(client);
-    memory_vector.push_back(grid_test);
+    grid_layout_vector.push_back(grid_test);
     client->setLayout(grid_test);
     ui->scrollArea->setWidget(client);
     QFileInfoList list = test_strat_dir.entryInfoList();
@@ -183,19 +170,22 @@ void MainWindow::readTestFiles()
         if (fileInfo.completeSuffix() == "json")
         {
             QPushButton *btn_test = new QPushButton(fileInfo.fileName());
-            memory_vector.push_back(btn_test);
-            btn_test->setMinimumHeight(btnHeight);
+            push_button_vector.push_back(btn_test);
+            btn_test->setMinimumHeight(BTNHEIGHT);
             grid_test->addWidget(btn_test);
             connect(btn_test, &QPushButton::clicked, this, &MainWindow::add_to_test_list);
         }
     }
+}
 
+void MainWindow::readStratFiles(void)
+{
     strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     strat_dir.setSorting(QDir::Size | QDir::Reversed);
     QWidget *client2 = new QWidget(this);
-    memory_vector.push_back(client2);
+    widget_vector.push_back(client2);
     QGridLayout *grid_strat = new QGridLayout(client2);
-    memory_vector.push_back(grid_strat);
+    grid_layout_vector.push_back(grid_strat);
     client2->setLayout(grid_strat);
     ui->scrollArea_2->setWidget(client2);
     QFileInfoList list2 = strat_dir.entryInfoList();
@@ -206,8 +196,8 @@ void MainWindow::readTestFiles()
         if (fileInfo2.completeSuffix() == "json")
         {
             QPushButton *btn_test = new QPushButton(fileInfo2.fileName());
-            memory_vector.push_back(btn_test);
-            btn_test->setMinimumHeight(btnHeight);
+            push_button_vector.push_back(btn_test);
+            btn_test->setMinimumHeight(BTNHEIGHT);
             btn_test->setStyleSheet("QPushButton::checked{background-color: rgb(0,255,0);}");
             btn_test->setCheckable(true);
             grid_strat->addWidget(btn_test);
@@ -227,4 +217,17 @@ void MainWindow::enable_go_button(void)
         return;
     }
     ui->stackedWidget->setCurrentWidget(ui->map_start);
+}
+
+void MainWindow::go_to_strategy()
+{
+    readStratFiles();
+    ui->stackedWidget->setCurrentWidget(ui->strategy);
+}
+
+void MainWindow::go_to_test()
+{
+    readTestFiles();
+    ui->stackedWidget->setCurrentWidget(ui->Tests);
+    ui->list_map_test_2->clear();
 }

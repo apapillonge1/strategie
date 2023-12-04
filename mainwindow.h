@@ -8,6 +8,10 @@
 #include <QButtonGroup>
 #include <QVector>
 #include <iostream>
+#include <QPushButton>
+#include <QListWidgetItem>
+#include <QGridLayout>
+#include "utility.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -34,15 +38,19 @@ private slots:
 
     void on_btn_suppr_test_clicked(void);
 
-    void btn_close_map_test(void);
-
     void readTestFiles(void);
+
+    void readStratFiles(void);
 
     void showTestFiles(void);
 
-    void readStrategyFiles(void);
+    void launchSelectedStrategy(void);
 
     void enable_go_button(void);
+
+    void go_to_strategy(void);
+
+    void go_to_test(void);
 
 private:
     Ui::mainWindow *ui;
@@ -54,11 +62,10 @@ private:
     QButtonGroup teamChoice;
     int nbrItemsListWidget;
     int strategyNbrs;
-    int btnHeight;
-    int mapHeight;
-    int mapLength;
-    int mapScale;
-    QVector <QObject*> memory_vector;
+    QVector <QPushButton*> push_button_vector;
+    QVector <QWidget*> widget_vector;
+    QVector <QGridLayout*> grid_layout_vector;
+    QVector <QListWidgetItem*> list_widget_item_vector;
 
 };
 #endif // MAINWINDOW_H
