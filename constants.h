@@ -1,5 +1,5 @@
-#ifndef UTILITY_H
-#define UTILITY_H
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 #define BTNHEIGHT 75
 #define MAPHEIGHT 2000
@@ -11,4 +11,4 @@
 
 
 
-#endif // UTILITY_H
+#endif // CONSTANTS_H

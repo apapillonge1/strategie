@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "gamestate.h"
-#include "utility.h"
+#include "constants.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     nbrItemsListWidget = 0;
-    strategyNbrs = 0;
     ui->setupUi(this);
     QRectF scene_rect(0, 0, MAPLENGTH, MAPHEIGHT);
     GameState::get()->playground().setSceneRect(scene_rect);
@@ -203,8 +202,6 @@ void MainWindow::readStratFiles(void)
             grid_strat->addWidget(btn_test);
             button_group.addButton(btn_test);
             std::cout <<button_group.id(btn_test) << std::endl;
-
-            strategyNbrs++;
         }
     }
 }

@@ -11,7 +11,7 @@
 #include <QPushButton>
 #include <QListWidgetItem>
 #include <QGridLayout>
-#include "utility.h"
+#include "constants.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -61,7 +61,6 @@ private:
     QButtonGroup button_group;
     QButtonGroup teamChoice;
     int nbrItemsListWidget;
-    int strategyNbrs;
     QVector <QPushButton*> push_button_vector;
     QVector <QWidget*> widget_vector;
     QVector <QGridLayout*> grid_layout_vector;
