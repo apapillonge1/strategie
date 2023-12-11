@@ -11,7 +11,11 @@
 #include <QPushButton>
 #include <QListWidgetItem>
 #include <QGridLayout>
+#include "ui_mainwindow.h"
+
 #include "constants.h"
+#include "qt_graphics_models/playground.h"
+#include "qt_graphics_models/robot.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -54,6 +58,10 @@ private slots:
 
 private:
     Ui::mainWindow *ui;
+
+    playground_scene playground;
+    robot_graphic_item robot;
+
     QStackedWidget *stackedWidget;
     QTimer *timer;
     QDir test_strat_dir;

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>ressources/images/vinyles_table_2024_BETA.svg</file>
+        <file>ressources/images/map.svg</file>
+        <file>ressources/images/robot.png</file>
     </qresource>
 </RCC>

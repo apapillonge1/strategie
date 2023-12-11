@@ -28,7 +28,7 @@
 background-color: rgb(213, 237, 255);</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="menu">
        <widget class="QLabel" name="label_infos_menu">

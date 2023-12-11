@@ -1,8 +1,4 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "gamestate.h"
-#include "constants.h"
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"),strat_dir("./../strats")
@@ -10,17 +6,27 @@ MainWindow::MainWindow(QWidget *parent)
 
     nbrItemsListWidget = 0;
     ui->setupUi(this);
-    QRectF scene_rect(0, 0, MAPLENGTH, MAPHEIGHT);
-    GameState::get()->playground().setSceneRect(scene_rect);
-    QImage image = QIcon(":/ressources/images/vinyles_table_2024_BETA.svg").pixmap(scene_rect.width(), scene_rect.height()).toImage();
-    GameState::get()->playground().setBackgroundBrush(image);
+
+    QRectF sceneRect(0, 0, playground_width, playground_height);
+    QImage image = QIcon(playground_image_resource.data()).pixmap(sceneRect.width(), sceneRect.height()).toImage();
+
+    playground.setSceneRect(sceneRect);
+    playground.setBackgroundBrush(image);
+    //playground strat
+    ui->playground->setAttribute(Qt::WA_AcceptTouchEvents);
+    ui->playground->scale(scaling, scaling);
+    ui->playground->setScene(&playground);
+    //playground test
+    ui->playground_test->setAttribute(Qt::WA_AcceptTouchEvents);
+    ui->playground_test->scale(scaling, scaling);
+    ui->playground_test->setScene(&playground);
+
+    QPixmap robotPixmap = QPixmap(robot_image_resource.data());
+    robot.setPixmap(robotPixmap.scaled(robotPixmap.width() * robot_scaling, robotPixmap.height() * robot_scaling));
+    robot.setPos(QPointF(500,500));
+    playground.addItem(&robot);
+
     button_group.setExclusive(true);
-
-    ui->playground->scale(MAPSCALE, MAPSCALE);
-    ui->playground->setScene(&GameState::get()->playground());
-
-    ui->playground_test->scale(MAPSCALE, MAPSCALE);
-    ui->playground_test->setScene(&GameState::get()->playground());
 
     ui->btn_blue_menu_start->setCheckable(true);
     ui->btn_yellow_menu_start->setCheckable(true);
