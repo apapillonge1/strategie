@@ -26,6 +26,19 @@ MainWindow::MainWindow(QWidget *parent)
     robot.setPos(QPointF(500,500));
     playground.addItem(&robot);
 
+    QPixmap fragile_plant_Pixmap = QPixmap(fragile_plant_ressource.data());
+    QPixmap fragile_plant_pot_Pixmap = QPixmap(fragile_plant_pot_ressource.data());
+    QPixmap regular_plant_Pixmap = QPixmap(regular_plant_ressource.data());
+    QPixmap regular_plant_pot_Pixmap = QPixmap(regular_plant_pot_ressource.data());
+
+    plants.emplaceBack(new Plants(fragile_plant_Pixmap, QRect(200, 200, 500, 500)));
+
+    playground.addItem(plants.back());
+
+//    fragile_plant.setPixmap(fragile_plant_Pixmap.scaled(fragile_plant_Pixmap.width() * robot_scaling, fragile_plant_Pixmap.height() * robot_scaling));
+//    fragile_plant.setPos(QPointF(100,100));
+//    playground.addItem(&fragile_plant_Pixmap);
+
     button_group.setExclusive(true);
 
     ui->btn_blue_menu_start->setCheckable(true);
@@ -35,6 +48,15 @@ MainWindow::MainWindow(QWidget *parent)
     teamChoice.addButton(ui->btn_blue_menu_start);
     teamChoice.addButton(ui->btn_yellow_menu_start);
     teamChoice.setExclusive(true);
+
+//    pf.set_hitbox(robot.boundingRect());
+//    pf.set_current_pos(robot.pos());
+
+//    connect(&foo, &foo::newGoal, &pf, &path_finder<holonome>::set_new_goal); //
+//    connect(&bar, &bar:::newObstacles, &pf, &path_finder<holonome>::set_obstacles); // Detection Manager
+//    connect(this, &MainWindow::newObstacles, &playground, &Playground::onNewObstacles);
+//    connect(&pf, &path_finder<selected_policy>::new_path_found, &playground, &Playground::onnew_path);
+//    connect(&robot, &Robot::posChanged, &pf, &path_finder<holonome>::set_current_pos);
 
     ui->stackedWidget->setCurrentWidget(ui->menu);
     connectButtons();
@@ -67,6 +89,11 @@ MainWindow::~MainWindow()
     {
         delete element;
     }
+    for (auto p : plants)
+    {
+        delete p;
+    }
+    plants.clear();
     grid_layout_vector.clear();
     delete ui;
 }
@@ -126,7 +153,6 @@ void MainWindow::on_btn_suppr_test_clicked()
 
 void MainWindow::showTestFiles()
 {
-    std::cout << "----------------------------------" << std::endl;
     if (nbrItemsListWidget <= 0)
     {
         std::cout << "No item in the list" << std::endl;
@@ -135,8 +161,6 @@ void MainWindow::showTestFiles()
     ui->stackedWidget->setCurrentWidget(ui->map_test_2);
     for (int i = 0; i <ui->list_tests->count(); i++)
     {
-        std::cout << "Hello" << std::endl;
-        std::cout << "----------------------------------" << std::endl;
         QString fileName = "../test_strat/" + ui->list_tests->item(i)->text();
         std::cout << fileName.toStdString() << std::endl;
         ui->list_map_test_2->addItem(ui->list_tests->item(i)->text());
@@ -152,6 +176,7 @@ void MainWindow::launchSelectedStrategy()
     }
     std::cout << "No checked strategy "<< std::endl;
 }
+
 void MainWindow::readTestFiles()
 {
     // lecture du fichier et création de bouton avec leurs noms
@@ -166,7 +191,6 @@ void MainWindow::readTestFiles()
     client->setLayout(grid_test);
     ui->scrollArea->setWidget(client);
     QFileInfoList list = test_strat_dir.entryInfoList();
-    std::cout << "Existing files : " << std::endl;
     for (int i = 0; i < list.size(); ++i)
     {
         QFileInfo fileInfo = list.at(i);

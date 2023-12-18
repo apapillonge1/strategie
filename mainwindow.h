@@ -14,8 +14,15 @@
 #include "ui_mainwindow.h"
 
 #include "constants.h"
+//#include "strategies.h"
+#include "ui/gameElements/plants.h"
 #include "qt_graphics_models/playground.h"
 #include "qt_graphics_models/robot.h"
+#include "qt_graphics_models/game_element.h"
+
+//#include "path_finding/path_finder.h"
+//#include "path_finding/path_checker.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -36,7 +43,6 @@ public slots:
     void add_to_test_list(void);
 
     void connectButtons(void);
-
 
 private slots:
 
@@ -61,6 +67,10 @@ private:
 
     playground_scene playground;
     robot_graphic_item robot;
+    game_element fragile_plant_pot;
+    game_element fragile_plant;
+    game_element regular_plant_pot;
+    game_element regular_plant;
 
     QStackedWidget *stackedWidget;
     QTimer *timer;
@@ -73,6 +83,9 @@ private:
     QVector <QWidget*> widget_vector;
     QVector <QGridLayout*> grid_layout_vector;
     QVector <QListWidgetItem*> list_widget_item_vector;
+    //path_finder<holonome> pf; // or path_finder<differential> path_finder;
+
+    QVector <Plants*> plants;
 
 };
 #endif // MAINWINDOW_H
