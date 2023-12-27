@@ -11,6 +11,8 @@
 #include <QPushButton>
 #include <QListWidgetItem>
 #include <QGridLayout>
+#include <QDebug>
+#include <qfilesystemwatcher.h>
 #include "constants.h"
 
 QT_BEGIN_NAMESPACE
@@ -65,6 +67,10 @@ private:
     QVector <QWidget*> widget_vector;
     QVector <QGridLayout*> grid_layout_vector;
     QVector <QListWidgetItem*> list_widget_item_vector;
+    QFileSystemWatcher test_watcher;
+    QFileSystemWatcher strat_watcher;
+    QStringList test_dir;
+    QStringList strat_dir_location;
 
 };
 #endif // MAINWINDOW_H

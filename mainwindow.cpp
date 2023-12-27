@@ -5,7 +5,8 @@
 
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"),strat_dir("./../strats")
+    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"), strat_dir("./../strats")
+
 {
 
     nbrItemsListWidget = 0;
@@ -33,6 +34,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->stackedWidget->setCurrentWidget(ui->menu);
     connectButtons();
     readTestFiles();
+    showTestFiles();
+    connect(&test_watcher, &QFileSystemWatcher::directoryChanged, this, &MainWindow::showTestFiles);
+    connect(&test_watcher, &QFileSystemWatcher::directoryChanged, this, &MainWindow::readTestFiles);
+    connect(&strat_watcher, &QFileSystemWatcher::directoryChanged, this, &MainWindow::readStratFiles);
 }
 
 MainWindow::~MainWindow()
@@ -62,6 +67,7 @@ MainWindow::~MainWindow()
         delete element;
     }
     grid_layout_vector.clear();
+
     delete ui;
 }
 
@@ -120,13 +126,20 @@ void MainWindow::on_btn_suppr_test_clicked()
 
 void MainWindow::showTestFiles()
 {
-    std::cout << "----------------------------------" << std::endl;
+    test_watcher.addPath("./../test_strat");
+    test_dir = test_strat_dir.entryList(QDir::Files);
+
+    foreach (QString filesName, test_dir) {
+    std::cout << filesName.toStdString() << std::endl;
+    }
+
     if (nbrItemsListWidget <= 0)
     {
         std::cout << "No item in the list" << std::endl;
         return;
     }
     ui->stackedWidget->setCurrentWidget(ui->map_test_2);
+
     for (int i = 0; i <ui->list_tests->count(); i++)
     {
         std::cout << "Hello" << std::endl;
@@ -134,7 +147,7 @@ void MainWindow::showTestFiles()
         QString fileName = "../test_strat/" + ui->list_tests->item(i)->text();
         std::cout << fileName.toStdString() << std::endl;
         ui->list_map_test_2->addItem(ui->list_tests->item(i)->text());
-    }
+        }
 }
 
 void MainWindow::launchSelectedStrategy()
@@ -148,7 +161,7 @@ void MainWindow::launchSelectedStrategy()
 }
 void MainWindow::readTestFiles()
 {
-    // lecture du fichier et création de bouton avec leurs noms
+     // lecture du fichier et création de bouton avec leurs noms
     test_strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     test_strat_dir.setSorting(QDir::Size | QDir::Reversed);
 
@@ -179,6 +192,9 @@ void MainWindow::readTestFiles()
 
 void MainWindow::readStratFiles(void)
 {
+    strat_watcher.addPath("./../strats");
+    strat_dir_location = strat_dir.entryList(QDir::Files);
+
     strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     strat_dir.setSorting(QDir::Size | QDir::Reversed);
     QWidget *client2 = new QWidget(this);
@@ -228,3 +244,4 @@ void MainWindow::go_to_test()
     ui->stackedWidget->setCurrentWidget(ui->Tests);
     ui->list_map_test_2->clear();
 }
+
