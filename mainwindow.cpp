@@ -113,7 +113,6 @@ void MainWindow::connectButtons()
     connect(ui->btn_start_tests, &QPushButton::clicked, this, &MainWindow::showTestFiles);
     connect(ui->btn_suppr_tests, &QPushButton::clicked, this, &MainWindow::on_btn_suppr_test_clicked);
 
-
     // strategy connect
     connect(ui->btn_strategy_close, &QPushButton::clicked, this, [this]()
             { ui->stackedWidget->setCurrentWidget(ui->menu); });
@@ -172,6 +171,10 @@ void MainWindow::launchSelectedStrategy()
     if(button_group.checkedId()!= -1)
     {
         ui->stackedWidget->setCurrentWidget(ui->menu_start);
+
+        auto stm = make_stm_from_json<action_factory<VRAC_context>>(ctx, "strategy", "../strats"); //<action_factory<context_vrac>>(ctx, "strat_name", "strat_directory");
+        auto manager = new strategyManager(stm);
+
         return;
     }
     std::cout << "No checked strategy "<< std::endl;

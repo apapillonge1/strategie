@@ -14,7 +14,7 @@
 #include "ui_mainwindow.h"
 
 #include "constants.h"
-//#include "strategies.h"
+#include "strategies.h"
 #include "ui/gameElements/plants.h"
 #include "qt_graphics_models/playground.h"
 #include "qt_graphics_models/robot.h"
@@ -22,7 +22,6 @@
 
 //#include "path_finding/path_finder.h"
 //#include "path_finding/path_checker.h"
-
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -86,6 +85,8 @@ private:
     //path_finder<holonome> pf; // or path_finder<differential> path_finder;
 
     QVector <Plants*> plants;
+
+    VRAC_context ctx{.colorside = true};
 
 };
 #endif // MAINWINDOW_H

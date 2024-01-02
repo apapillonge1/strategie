@@ -1,5 +1,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
+#include <string>
 
 #define BTNHEIGHT 75
 #define MAPSCALE 0.2

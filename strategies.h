@@ -2,7 +2,7 @@
 #define STRATEGIES_H
 
 #include "JSON_overlay/jsonstatemachine.h"
-
+#include "strategy/strategymanager.h"
 
 struct VRAC_context {
     bool colorside;
