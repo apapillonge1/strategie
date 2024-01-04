@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"),strat_dir("./../strats")
+    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"), strat_dir("./../strats")
 {
 
     nbrItemsListWidget = 0;
@@ -12,18 +12,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     playground.setSceneRect(sceneRect);
     playground.setBackgroundBrush(image);
-    //playground strat
+    // playground strat
     ui->playground->setAttribute(Qt::WA_AcceptTouchEvents);
     ui->playground->scale(scaling, scaling);
     ui->playground->setScene(&playground);
-    //playground test
+    // playground test
     ui->playground_test->setAttribute(Qt::WA_AcceptTouchEvents);
     ui->playground_test->scale(scaling, scaling);
     ui->playground_test->setScene(&playground);
 
     QPixmap robotPixmap = QPixmap(robot_image_resource.data());
     robot.setPixmap(robotPixmap.scaled(robotPixmap.width() * robot_scaling, robotPixmap.height() * robot_scaling));
-    robot.setPos(QPointF(500,500));
+    robot.setPos(QPointF(500, 500));
     playground.addItem(&robot);
 
     QPixmap fragile_plant_Pixmap = QPixmap(fragile_plant_ressource.data());
@@ -35,9 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     playground.addItem(plants.back());
 
-//    fragile_plant.setPixmap(fragile_plant_Pixmap.scaled(fragile_plant_Pixmap.width() * robot_scaling, fragile_plant_Pixmap.height() * robot_scaling));
-//    fragile_plant.setPos(QPointF(100,100));
-//    playground.addItem(&fragile_plant_Pixmap);
+    //    fragile_plant.setPixmap(fragile_plant_Pixmap.scaled(fragile_plant_Pixmap.width() * robot_scaling, fragile_plant_Pixmap.height() * robot_scaling));
+    //    fragile_plant.setPos(QPointF(100,100));
+    //    playground.addItem(&fragile_plant_Pixmap);
 
     button_group.setExclusive(true);
 
@@ -49,14 +49,14 @@ MainWindow::MainWindow(QWidget *parent)
     teamChoice.addButton(ui->btn_yellow_menu_start);
     teamChoice.setExclusive(true);
 
-//    pf.set_hitbox(robot.boundingRect());
-//    pf.set_current_pos(robot.pos());
+    //    pf.set_hitbox(robot.boundingRect());
+    //    pf.set_current_pos(robot.pos());
 
-//    connect(&foo, &foo::newGoal, &pf, &path_finder<holonome>::set_new_goal); //
-//    connect(&bar, &bar:::newObstacles, &pf, &path_finder<holonome>::set_obstacles); // Detection Manager
-//    connect(this, &MainWindow::newObstacles, &playground, &Playground::onNewObstacles);
-//    connect(&pf, &path_finder<selected_policy>::new_path_found, &playground, &Playground::onnew_path);
-//    connect(&robot, &Robot::posChanged, &pf, &path_finder<holonome>::set_current_pos);
+    //    connect(&foo, &foo::newGoal, &pf, &path_finder<holonome>::set_new_goal); //
+    //    connect(&bar, &bar:::newObstacles, &pf, &path_finder<holonome>::set_obstacles); // Detection Manager
+    //    connect(this, &MainWindow::newObstacles, &playground, &Playground::onNewObstacles);
+    //    connect(&pf, &path_finder<selected_policy>::new_path_found, &playground, &Playground::onnew_path);
+    //    connect(&robot, &Robot::posChanged, &pf, &path_finder<holonome>::set_current_pos);
 
     ui->stackedWidget->setCurrentWidget(ui->menu);
     connectButtons();
@@ -146,7 +146,7 @@ void MainWindow::on_btn_suppr_test_clicked()
     foreach (QListWidgetItem *ligne, ui->list_tests->selectedItems())
     {
         delete ui->list_tests->takeItem(ui->list_tests->row(ligne));
-        nbrItemsListWidget --;
+        nbrItemsListWidget--;
     }
 }
 
@@ -158,7 +158,7 @@ void MainWindow::showTestFiles()
         return;
     }
     ui->stackedWidget->setCurrentWidget(ui->map_test_2);
-    for (int i = 0; i <ui->list_tests->count(); i++)
+    for (int i = 0; i < ui->list_tests->count(); i++)
     {
         QString fileName = "../test_strat/" + ui->list_tests->item(i)->text();
         std::cout << fileName.toStdString() << std::endl;
@@ -168,16 +168,16 @@ void MainWindow::showTestFiles()
 
 void MainWindow::launchSelectedStrategy()
 {
-    if(button_group.checkedId()!= -1)
+    if (button_group.checkedId() != -1)
     {
         ui->stackedWidget->setCurrentWidget(ui->menu_start);
 
-        auto stm = make_stm_from_json<action_factory<VRAC_context>>(ctx, "strategy", "../strats"); //<action_factory<context_vrac>>(ctx, "strat_name", "strat_directory");
+        auto stm = make_stm_from_json<action_factory<VRAC_context>>(ctx, "strategy", "../strats/"); //<action_factory<context_vrac>>(ctx, "strat_name", "strat_directory");
         auto manager = new strategyManager(stm);
 
         return;
     }
-    std::cout << "No checked strategy "<< std::endl;
+    std::cout << "No checked strategy " << std::endl;
 }
 
 void MainWindow::readTestFiles()
@@ -234,14 +234,14 @@ void MainWindow::readStratFiles(void)
             btn_test->setCheckable(true);
             grid_strat->addWidget(btn_test);
             button_group.addButton(btn_test);
-            std::cout <<button_group.id(btn_test) << std::endl;
+            std::cout << button_group.id(btn_test) << std::endl;
         }
     }
 }
 
 void MainWindow::enable_go_button(void)
 {
-    if(teamChoice.checkedId() == -1)
+    if (teamChoice.checkedId() == -1)
     {
         ui->btn_go_menu_start->setStyleSheet("QPushButton::checked{background-color: rgb(192,192,192);}");
         return;
