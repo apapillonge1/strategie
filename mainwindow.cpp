@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"), strat_dir("./../strats")
+    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../tests"), strat_dir("./../strats")
 {
 
     nbrItemsListWidget = 0;
@@ -160,7 +160,7 @@ void MainWindow::showTestFiles()
     ui->stackedWidget->setCurrentWidget(ui->map_test_2);
     for (int i = 0; i < ui->list_tests->count(); i++)
     {
-        QString fileName = "../test_strat/" + ui->list_tests->item(i)->text();
+        QString fileName = "../tests/" + ui->list_tests->item(i)->text();
         std::cout << fileName.toStdString() << std::endl;
         ui->list_map_test_2->addItem(ui->list_tests->item(i)->text());
     }
@@ -172,7 +172,9 @@ void MainWindow::launchSelectedStrategy()
     {
         ui->stackedWidget->setCurrentWidget(ui->menu_start);
 
-        auto stm = make_stm_from_json<action_factory<VRAC_context>>(ctx, "strategy", "../strats/"); //<action_factory<context_vrac>>(ctx, "strat_name", "strat_directory");
+        QString filename = button_group.checkedButton()->text();
+
+        auto stm = make_stm_from_json<action_factory<VRAC_context>>(ctx, filename.toStdString(), "../strats/"); //<action_factory<context_vrac>>(ctx, "strat_name", "strat_directory");
         auto manager = new strategyManager(stm);
 
         return;
@@ -201,7 +203,7 @@ void MainWindow::readTestFiles()
         std::cout << std::endl;
         if (fileInfo.completeSuffix() == "json")
         {
-            QPushButton *btn_test = new QPushButton(fileInfo.fileName());
+            QPushButton *btn_test = new QPushButton(fileInfo.completeBaseName());
             push_button_vector.push_back(btn_test);
             btn_test->setMinimumHeight(BTNHEIGHT);
             grid_test->addWidget(btn_test);
@@ -227,7 +229,7 @@ void MainWindow::readStratFiles(void)
         std::cout << std::endl;
         if (fileInfo2.completeSuffix() == "json")
         {
-            QPushButton *btn_test = new QPushButton(fileInfo2.fileName());
+            QPushButton *btn_test = new QPushButton(fileInfo2.completeBaseName());
             push_button_vector.push_back(btn_test);
             btn_test->setMinimumHeight(BTNHEIGHT);
             btn_test->setStyleSheet("QPushButton::checked{background-color: rgb(0,255,0);}");
