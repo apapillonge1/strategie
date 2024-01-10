@@ -6,6 +6,9 @@
 #define MAPLENGTH 3000
 #define MAPSCALE 0.2
 
+#define TESTPATH "./../test_strat"
+#define STRATEGYPATH "./../strats"
+
 
 
 

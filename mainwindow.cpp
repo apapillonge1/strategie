@@ -5,7 +5,7 @@
 
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../test_strat"), strat_dir("./../strats")
+    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir(TESTPATH), strat_dir(STRATEGYPATH)
 
 {
 
@@ -126,7 +126,7 @@ void MainWindow::on_btn_suppr_test_clicked()
 
 void MainWindow::showTestFiles()
 {
-    test_watcher.addPath("./../test_strat");
+    test_watcher.addPath(TESTPATH);
     test_dir = test_strat_dir.entryList(QDir::Files);
 
     foreach (QString filesName, test_dir) {
@@ -192,7 +192,7 @@ void MainWindow::readTestFiles()
 
 void MainWindow::readStratFiles(void)
 {
-    strat_watcher.addPath("./../strats");
+    strat_watcher.addPath(STRATEGYPATH);
     strat_dir_location = strat_dir.entryList(QDir::Files);
 
     strat_dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
