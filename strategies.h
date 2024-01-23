@@ -2,32 +2,20 @@
 #define STRATEGIES_H
 
 #include "JSON_overlay/jsonstatemachine.h"
-#include "strategy/strategymanager.h"
 
-struct VRAC_context {
-    bool colorside;
-    //path_finder & path_finder;
-    //CanBusSocket can;
-    //...
-};
-
-struct Line : public state<VRAC_context, nlohmann::json> {
-public:
-    Line(const std::string & name,  const nlohmann::json & params) : state<VRAC_context, nlohmann::json>(name, params){
-    }
-
-    virtual void on_entry(VRAC_context &, Event) override {}
-        // read params to get the distance
-        // send goal to path_finder to check if path is ok
-        // send command to can
-
-
-    virtual void on_exit(VRAC_context &, Event) override {}
-};
+#include "commonActions.h"
+#include "robotActions.h"
 
 template<>
-inline action_factory<VRAC_context>::meta_factory_type action_factory<VRAC_context>::meta_factory = {
-    {"Line",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} }//,
+inline action_factory<Context>::meta_factory_type action_factory<Context>::meta_factory = {
+    {"Line",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
+    {"Rotate",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
+    {"XYT",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
+    {"Homing",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
+    {"Wait",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
+    {"AddPoints",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
+    {"RegisterPoints",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
+
     //{"YourActionName", [](const std::string & tag, const nlohmann::json &params) {return new YourActionName(tag, params);} }
 };
 

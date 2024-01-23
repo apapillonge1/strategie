@@ -174,7 +174,7 @@ void MainWindow::launchSelectedStrategy()
 
         QString filename = button_group.checkedButton()->text();
 
-        auto stm = make_stm_from_json<action_factory<VRAC_context>>(ctx, filename.toStdString(), "../strats/"); //<action_factory<context_vrac>>(ctx, "strat_name", "strat_directory");
+        auto stm = make_stm_from_json<action_factory<Context>>(ctx, filename.toStdString(), "../strats/"); //<action_factory<context_vrac>>(ctx, "strat_name", "strat_directory");
         auto manager = new strategyManager(stm);
 
         return;

@@ -15,6 +15,7 @@
 
 #include "constants.h"
 #include "strategies.h"
+#include "strategy/strategymanager.h"
 #include "ui/gameElements/plants.h"
 #include "qt_graphics_models/playground.h"
 #include "qt_graphics_models/robot.h"
@@ -86,7 +87,7 @@ private:
 
     QVector <Plants*> plants;
 
-    VRAC_context ctx{.colorside = true};
+    Context ctx{.colorside = true};
 
 };
 #endif // MAINWINDOW_H

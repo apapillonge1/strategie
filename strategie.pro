@@ -36,8 +36,11 @@ HEADERS += \
     ../VRAC_sdk/include/strategy/STM/stm.h \
     ../VRAC_sdk/include/strategy/STM/transition.h \
     ../VRAC_sdk/include/strategy/strategymanager.h \
+    commonActions.h \
     constants.h \
+    context.h \
     mainwindow.h \
+    robotActions.h \
     strategies.h \
     ui/gameElements/plants.h
 
