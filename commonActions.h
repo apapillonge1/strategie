@@ -164,5 +164,4 @@ public:
     virtual void on_exit(Context &, Event) override {}
 };
 
-
 #endif // COMMONACTIONS_H

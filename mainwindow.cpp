@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     playground.addItem(plants.back());
 
+    setObstacles();
+
     //    fragile_plant.setPixmap(fragile_plant_Pixmap.scaled(fragile_plant_Pixmap.width() * robot_scaling, fragile_plant_Pixmap.height() * robot_scaling));
     //    fragile_plant.setPos(QPointF(100,100));
     //    playground.addItem(&fragile_plant_Pixmap);
@@ -49,14 +51,14 @@ MainWindow::MainWindow(QWidget *parent)
     teamChoice.addButton(ui->btn_yellow_menu_start);
     teamChoice.setExclusive(true);
 
-    //    pf.set_hitbox(robot.boundingRect());
-    //    pf.set_current_pos(robot.pos());
+    pf.set_hitbox(robot.boundingRect());
+    pf.set_current_pos(robot.pos());
 
-    //    connect(&foo, &foo::newGoal, &pf, &path_finder<holonome>::set_new_goal); //
-    //    connect(&bar, &bar:::newObstacles, &pf, &path_finder<holonome>::set_obstacles); // Detection Manager
-    //    connect(this, &MainWindow::newObstacles, &playground, &Playground::onNewObstacles);
-    //    connect(&pf, &path_finder<selected_policy>::new_path_found, &playground, &Playground::onnew_path);
-    //    connect(&robot, &Robot::posChanged, &pf, &path_finder<holonome>::set_current_pos);
+    //connect(&foo, &foo::newGoal, &pf, &path_finder<holonome>::set_new_goal;
+    //connect(&bar, &bar::newObstacles, &pf, &path_finder<holonome>::set_obstacles); // Detection Manager
+    connect(this, &MainWindow::newObstacles, &playground, &playground_scene::on_new_obstacles);
+    //connect(&pf, &path_finder<holonome>::new_path_found, &playground, &playground_scene::on_new_path);
+    //connect(&robot, &robot_graphic_item::posChanged, &pf, &path_finder<holonome>::set_current_pos);
 
     ui->stackedWidget->setCurrentWidget(ui->menu);
     connectButtons();
@@ -262,4 +264,19 @@ void MainWindow::go_to_test()
     readTestFiles();
     ui->stackedWidget->setCurrentWidget(ui->Tests);
     ui->list_map_test_2->clear();
+}
+
+std::vector<obstacle> MainWindow::newObstacles(game_element newElem)
+{
+    obstacles.push_back(newElem);
+    return obstacles;
+}
+
+void MainWindow::setObstacles()
+{
+    newObstacles(fragile_plant_pot);
+    newObstacles(fragile_plant);
+    newObstacles(regular_plant_pot);
+    newObstacles(regular_plant);
+
 }

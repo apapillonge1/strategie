@@ -21,8 +21,8 @@
 #include "qt_graphics_models/robot.h"
 #include "qt_graphics_models/game_element.h"
 
-//#include "path_finding/path_finder.h"
-//#include "path_finding/path_checker.h"
+#include "path_finding/path_finder.h"
+#include "path_finding/path_checker.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -62,6 +62,10 @@ private slots:
 
     void go_to_test(void);
 
+    std::vector<obstacle> newObstacles(game_element newElem);
+
+    void setObstacles();
+
 private:
     Ui::mainWindow *ui;
 
@@ -83,11 +87,13 @@ private:
     QVector <QWidget*> widget_vector;
     QVector <QGridLayout*> grid_layout_vector;
     QVector <QListWidgetItem*> list_widget_item_vector;
-    //path_finder<holonome> pf; // or path_finder<differential> path_finder;
+    path_finder<holonome> pf; // or path_finder<differential> path_finder;
 
     QVector <Plants*> plants;
 
     Context ctx{.colorside = true};
+
+    std::vector<obstacle> obstacles;
 
 };
 #endif // MAINWINDOW_H
