@@ -16,8 +16,9 @@ public:
     // send goal to path_finder to check if path is ok
     // send command to can
 
+    virtual void on_exit(Context &, Event) override {
 
-    virtual void on_exit(Context &, Event) override {}
+    }
 };
 
 struct Rotate : public state<Context, nlohmann::json> {

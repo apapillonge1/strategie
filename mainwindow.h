@@ -62,9 +62,9 @@ private slots:
 
     void go_to_test(void);
 
-    std::vector<obstacle> newObstacles(game_element newElem);
+    //std::vector<obstacle> newObstacles(game_element newElem);
 
-    void setObstacles();
+    //void setObstacles();
 
 private:
     Ui::mainWindow *ui;
@@ -87,13 +87,18 @@ private:
     QVector <QWidget*> widget_vector;
     QVector <QGridLayout*> grid_layout_vector;
     QVector <QListWidgetItem*> list_widget_item_vector;
-    path_finder<holonome> pf; // or path_finder<differential> path_finder;
+    //path_finder<holonome> pf; // or path_finder<differential> path_finder;
 
     QVector <Plants*> plants;
 
-    Context ctx{.colorside = true};
+    //QPolygonF polygon_wide_scene;
+    //QPolygonF polygon_scene;
 
+    obstacle *playground_border_obstacle;
     std::vector<obstacle> obstacles;
 
+    Context ctx{.colorside = true};
+
+    //obstacle playground_border;
 };
 #endif // MAINWINDOW_H

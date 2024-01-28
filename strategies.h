@@ -9,12 +9,12 @@
 template<>
 inline action_factory<Context>::meta_factory_type action_factory<Context>::meta_factory = {
     {"Line",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
-    {"Rotate",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
-    {"XYT",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
-    {"Homing",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
-    {"Wait",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
-    {"AddPoints",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
-    {"RegisterPoints",    [](const std::string & tag, const nlohmann::json &params) {return new Line(tag, params);} },
+    {"Rotate",    [](const std::string & tag, const nlohmann::json &params) {return new Rotate(tag, params);} },
+    {"XYT",    [](const std::string & tag, const nlohmann::json &params) {return new XYT(tag, params);} },
+    {"Homing",    [](const std::string & tag, const nlohmann::json &params) {return new Homing(tag, params);} },
+    {"Wait",    [](const std::string & tag, const nlohmann::json &params) {return new Wait(tag, params);} },
+    {"AddPoints",    [](const std::string & tag, const nlohmann::json &params) {return new AddPoints(tag, params);} },
+    {"RegisterPoints",    [](const std::string & tag, const nlohmann::json &params) {return new RegisterPoints(tag, params);} },
 
     //{"YourActionName", [](const std::string & tag, const nlohmann::json &params) {return new YourActionName(tag, params);} }
 };

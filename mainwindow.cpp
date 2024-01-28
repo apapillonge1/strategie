@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <QRectF>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../tests"), strat_dir("./../strats")
@@ -20,6 +21,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->playground_test->setAttribute(Qt::WA_AcceptTouchEvents);
     ui->playground_test->scale(scaling, scaling);
     ui->playground_test->setScene(&playground);
+    //QRect(-1 * border_gap,-1 * border_gap, playground_width + border_gap, playground_height + border_gap);
+    QPolygonF polygon_wide_scene(QRectF(-1 * border_gap,-1 * border_gap, playground_width + border_gap, playground_height + border_gap));
+    QPolygonF polygon1(sceneRect);
+
+    playground_border_obstacle = new obstacle(polygon_wide_scene);
+
+    obstacles.push_back(*playground_border_obstacle);
+    playground.on_new_obstacles(obstacles);
 
     QPixmap robotPixmap = QPixmap(robot_image_resource.data());
     robot.setPixmap(robotPixmap.scaled(robotPixmap.width() * robot_scaling, robotPixmap.height() * robot_scaling));
@@ -35,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     playground.addItem(plants.back());
 
-    setObstacles();
+    //setObstacles();
 
     //    fragile_plant.setPixmap(fragile_plant_Pixmap.scaled(fragile_plant_Pixmap.width() * robot_scaling, fragile_plant_Pixmap.height() * robot_scaling));
     //    fragile_plant.setPos(QPointF(100,100));
@@ -51,12 +60,12 @@ MainWindow::MainWindow(QWidget *parent)
     teamChoice.addButton(ui->btn_yellow_menu_start);
     teamChoice.setExclusive(true);
 
-    pf.set_hitbox(robot.boundingRect());
-    pf.set_current_pos(robot.pos());
+    //pf.set_hitbox(robot.boundingRect());
+    //pf.set_current_pos(robot.pos());
 
     //connect(&foo, &foo::newGoal, &pf, &path_finder<holonome>::set_new_goal;
     //connect(&bar, &bar::newObstacles, &pf, &path_finder<holonome>::set_obstacles); // Detection Manager
-    connect(this, &MainWindow::newObstacles, &playground, &playground_scene::on_new_obstacles);
+    //connect(this, &MainWindow::newObstacles, &playground, &playground_scene::on_new_obstacles);
     //connect(&pf, &path_finder<holonome>::new_path_found, &playground, &playground_scene::on_new_path);
     //connect(&robot, &robot_graphic_item::posChanged, &pf, &path_finder<holonome>::set_current_pos);
 
@@ -266,17 +275,17 @@ void MainWindow::go_to_test()
     ui->list_map_test_2->clear();
 }
 
-std::vector<obstacle> MainWindow::newObstacles(game_element newElem)
-{
-    obstacles.push_back(newElem);
-    return obstacles;
-}
+//std::vector<obstacle> MainWindow::newObstacles(game_element newElem)
+//{
+//    obstacles.push_back(newElem);
+//    return obstacles;
+//}
 
-void MainWindow::setObstacles()
-{
-    newObstacles(fragile_plant_pot);
-    newObstacles(fragile_plant);
-    newObstacles(regular_plant_pot);
-    newObstacles(regular_plant);
+//void MainWindow::setObstacles()
+//{
+//    newObstacles(fragile_plant_pot);
+//    newObstacles(fragile_plant);
+//    newObstacles(regular_plant_pot);
+//    newObstacles(regular_plant);
 
-}
+//}

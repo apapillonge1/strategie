@@ -9,6 +9,8 @@
 constexpr std::string_view playground_image_resource = ":/ressources/images/map.svg";
 constexpr unsigned int playground_width = 3000;
 constexpr unsigned int playground_height = 2000;
+
+constexpr unsigned int border_gap = 10;
 constexpr double scaling = 0.2;
 
 //constexpr std::string_view robot_image_resource = ":/ressources/images/robot_ouvert.png";
