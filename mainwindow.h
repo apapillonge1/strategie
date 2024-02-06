@@ -33,11 +33,15 @@ QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
-
+Q_OBJECT
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+signals:
+    void new_goal(QPointF goal, double theta);
+    void new_obstacles(const std::vector<obstacle>& obstacles);
+
 
 public slots:
     void add_to_test_list(void);
@@ -88,6 +92,7 @@ private:
     QVector <QGridLayout*> grid_layout_vector;
     QVector <QListWidgetItem*> list_widget_item_vector;
     //path_finder<holonome> pf; // or path_finder<differential> path_finder;
+    path_finder<differential> pf;
 
     QVector <Plants*> plants;
 

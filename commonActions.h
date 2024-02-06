@@ -10,15 +10,27 @@ public:
     }
 
     virtual void on_entry(Context &, Event) override {
-        qDebug() <<  nlohmann::to_string(params);
+        //qDebug() <<  nlohmann::to_string(params);
+        speed = nlohmann::to_string(params["speed"]["selected"]);
+        std::cout << "speed : " << speed << std::endl;
+
+        distance = params["distance"];
+        std::cout << "distance : " << distance << std::endl;
+
+        forward = params["forward"];
+        std::cout << "forward : " << forward << std::endl;
     }
     // read params to get the distance
     // send goal to path_finder to check if path is ok
     // send command to can
 
     virtual void on_exit(Context &, Event) override {
-
     }
+
+private:
+    int distance;
+    std::string speed;
+    bool forward;
 };
 
 struct Rotate : public state<Context, nlohmann::json> {
@@ -35,6 +47,12 @@ public:
 
 
     virtual void on_exit(Context &, Event) override {}
+
+private:
+    bool displayed;
+    bool relative;
+    int theta;
+    std::string speed;
 };
 
 struct XYT : public state<Context, nlohmann::json> {

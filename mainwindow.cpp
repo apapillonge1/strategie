@@ -23,12 +23,23 @@ MainWindow::MainWindow(QWidget *parent)
     ui->playground_test->setScene(&playground);
     //QRect(-1 * border_gap,-1 * border_gap, playground_width + border_gap, playground_height + border_gap);
     QPolygonF polygon_wide_scene(QRectF(-1 * border_gap,-1 * border_gap, playground_width + border_gap, playground_height + border_gap));
+
     QPolygonF polygon1(sceneRect);
+    QPolygonF leftBorder = {QPointF(-1 * border_gap, -1 * border_gap) , QPointF(-1 * border_gap, playground_height + border_gap)};
+    QPolygonF rightBorder = {QPointF(playground_width + border_gap, border_gap) , QPointF(playground_width + border_gap, playground_height + border_gap)};
+    QPolygonF upBorder = {QPointF(-1 * border_gap, -1 * border_gap) , QPointF(playground_width + border_gap, border_gap)};
+    QPolygonF downBorder = {QPointF(-1 * border_gap, playground_height + border_gap) , QPointF(playground_width + border_gap, playground_height + 10)};
 
     playground_border_obstacle = new obstacle(polygon_wide_scene);
 
-    obstacles.push_back(*playground_border_obstacle);
+    obstacles.push_back(obstacle(leftBorder));
+    obstacles.push_back(obstacle(rightBorder));
+    obstacles.push_back(obstacle(upBorder));
+    obstacles.push_back(obstacle(downBorder));
     playground.on_new_obstacles(obstacles);
+
+    pf.set_hitbox(robot.boundingRect());
+    pf.set_current_pos(robot.pos());
 
     QPixmap robotPixmap = QPixmap(robot_image_resource.data());
     robot.setPixmap(robotPixmap.scaled(robotPixmap.width() * robot_scaling, robotPixmap.height() * robot_scaling));
@@ -63,11 +74,11 @@ MainWindow::MainWindow(QWidget *parent)
     //pf.set_hitbox(robot.boundingRect());
     //pf.set_current_pos(robot.pos());
 
-    //connect(&foo, &foo::newGoal, &pf, &path_finder<holonome>::set_new_goal;
-    //connect(&bar, &bar::newObstacles, &pf, &path_finder<holonome>::set_obstacles); // Detection Manager
-    //connect(this, &MainWindow::newObstacles, &playground, &playground_scene::on_new_obstacles);
-    //connect(&pf, &path_finder<holonome>::new_path_found, &playground, &playground_scene::on_new_path);
-    //connect(&robot, &robot_graphic_item::posChanged, &pf, &path_finder<holonome>::set_current_pos);
+    connect(this, &MainWindow::new_goal, &pf, &path_finder<differential>::set_new_goal);
+    connect(this, &MainWindow::new_obstacles, &pf, &path_finder<differential>::set_obstacles); // Detection Manager
+    connect(this, &MainWindow::new_obstacles, &playground, &playground_scene::on_new_obstacles);
+    connect(&pf, &path_finder<differential>::new_path_found, &playground, &playground_scene::on_new_path);
+    connect(&robot, &robot_graphic_item::posChanged, &pf, &path_finder<differential>::set_current_pos);
 
     ui->stackedWidget->setCurrentWidget(ui->menu);
     connectButtons();
