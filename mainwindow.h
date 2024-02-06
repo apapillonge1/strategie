@@ -96,10 +96,6 @@ private:
 
     QVector <Plants*> plants;
 
-    //QPolygonF polygon_wide_scene;
-    //QPolygonF polygon_scene;
-
-    obstacle *playground_border_obstacle;
     std::vector<obstacle> obstacles;
 
     Context ctx{.colorside = true};

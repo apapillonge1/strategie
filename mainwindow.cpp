@@ -21,21 +21,24 @@ MainWindow::MainWindow(QWidget *parent)
     ui->playground_test->setAttribute(Qt::WA_AcceptTouchEvents);
     ui->playground_test->scale(scaling, scaling);
     ui->playground_test->setScene(&playground);
-    //QRect(-1 * border_gap,-1 * border_gap, playground_width + border_gap, playground_height + border_gap);
-    QPolygonF polygon_wide_scene(QRectF(-1 * border_gap,-1 * border_gap, playground_width + border_gap, playground_height + border_gap));
 
     QPolygonF polygon1(sceneRect);
     QPolygonF leftBorder = {QPointF(-1 * border_gap, -1 * border_gap) , QPointF(-1 * border_gap, playground_height + border_gap)};
     QPolygonF rightBorder = {QPointF(playground_width + border_gap, border_gap) , QPointF(playground_width + border_gap, playground_height + border_gap)};
     QPolygonF upBorder = {QPointF(-1 * border_gap, -1 * border_gap) , QPointF(playground_width + border_gap, border_gap)};
-    QPolygonF downBorder = {QPointF(-1 * border_gap, playground_height + border_gap) , QPointF(playground_width + border_gap, playground_height + 10)};
-
-    playground_border_obstacle = new obstacle(polygon_wide_scene);
+    QPolygonF downBorder = {QPointF(-1 * border_gap, playground_height + border_gap) , QPointF(playground_width + border_gap, playground_height + border_gap)};
+    QPolygonF ennemy = QPolygonF(QRectF(QPointF(2100, 1100), QPointF(2200,1900)));
 
     obstacles.push_back(obstacle(leftBorder));
     obstacles.push_back(obstacle(rightBorder));
     obstacles.push_back(obstacle(upBorder));
     obstacles.push_back(obstacle(downBorder));
+
+
+
+    obstacles.push_back(obstacle(obstacle::generatePolygon(QPointF(750, 750), 400), obstacle::generatePolygon(QPointF(750, 750), 400)));
+
+
     playground.on_new_obstacles(obstacles);
 
     pf.set_hitbox(robot.boundingRect());
@@ -55,8 +58,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     playground.addItem(plants.back());
 
-    //setObstacles();
-
     //    fragile_plant.setPixmap(fragile_plant_Pixmap.scaled(fragile_plant_Pixmap.width() * robot_scaling, fragile_plant_Pixmap.height() * robot_scaling));
     //    fragile_plant.setPos(QPointF(100,100));
     //    playground.addItem(&fragile_plant_Pixmap);
@@ -71,14 +72,17 @@ MainWindow::MainWindow(QWidget *parent)
     teamChoice.addButton(ui->btn_yellow_menu_start);
     teamChoice.setExclusive(true);
 
-    //pf.set_hitbox(robot.boundingRect());
-    //pf.set_current_pos(robot.pos());
+    pf.set_hitbox(robot.boundingRect());
+    pf.set_current_pos(robot.pos());
 
     connect(this, &MainWindow::new_goal, &pf, &path_finder<differential>::set_new_goal);
     connect(this, &MainWindow::new_obstacles, &pf, &path_finder<differential>::set_obstacles); // Detection Manager
     connect(this, &MainWindow::new_obstacles, &playground, &playground_scene::on_new_obstacles);
     connect(&pf, &path_finder<differential>::new_path_found, &playground, &playground_scene::on_new_path);
     connect(&robot, &robot_graphic_item::posChanged, &pf, &path_finder<differential>::set_current_pos);
+
+    pf.set_new_goal(QPointF(playground_width, playground_height), 0);
+    pf.set_static_obstacles(obstacles);
 
     ui->stackedWidget->setCurrentWidget(ui->menu);
     connectButtons();
