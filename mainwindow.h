@@ -66,9 +66,17 @@ private slots:
 
     void go_to_test(void);
 
-    //std::vector<obstacle> newObstacles(game_element newElem);
+    void init_buttons(void);
 
-    //void setObstacles();
+    void init_playground(void);
+
+    void init_plants(void);
+
+    void init_robot(void);
+
+    void init_obstacles(void);
+
+    void init_path_finder(void);
 
 private:
     Ui::mainWindow *ui;

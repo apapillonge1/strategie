@@ -8,84 +8,18 @@ MainWindow::MainWindow(QWidget *parent)
     nbrItemsListWidget = 0;
     ui->setupUi(this);
 
-    QRectF sceneRect(0, 0, playground_width, playground_height);
-    QImage image = QIcon(playground_image_resource.data()).pixmap(sceneRect.width(), sceneRect.height()).toImage();
+    init_buttons();
 
-    playground.setSceneRect(sceneRect);
-    playground.setBackgroundBrush(image);
-    // playground strat
-    ui->playground->setAttribute(Qt::WA_AcceptTouchEvents);
-    ui->playground->scale(scaling, scaling);
-    ui->playground->setScene(&playground);
-    // playground test
-    ui->playground_test->setAttribute(Qt::WA_AcceptTouchEvents);
-    ui->playground_test->scale(scaling, scaling);
-    ui->playground_test->setScene(&playground);
+    init_playground();
 
-    QPolygonF polygon1(sceneRect);
-    QPolygonF leftBorder = {QPointF(-1 * border_gap, -1 * border_gap) , QPointF(-1 * border_gap, playground_height + border_gap)};
-    QPolygonF rightBorder = {QPointF(playground_width + border_gap, border_gap) , QPointF(playground_width + border_gap, playground_height + border_gap)};
-    QPolygonF upBorder = {QPointF(-1 * border_gap, -1 * border_gap) , QPointF(playground_width + border_gap, border_gap)};
-    QPolygonF downBorder = {QPointF(-1 * border_gap, playground_height + border_gap) , QPointF(playground_width + border_gap, playground_height + border_gap)};
-    QPolygonF ennemy = QPolygonF(QRectF(QPointF(2100, 1100), QPointF(2200,1900)));
+    init_robot();
 
-    obstacles.push_back(obstacle(leftBorder));
-    obstacles.push_back(obstacle(rightBorder));
-    obstacles.push_back(obstacle(upBorder));
-    obstacles.push_back(obstacle(downBorder));
+    init_plants();
 
+    init_obstacles();
 
+    init_path_finder();
 
-    obstacles.push_back(obstacle(obstacle::generatePolygon(QPointF(750, 750), 400), obstacle::generatePolygon(QPointF(750, 750), 400)));
-
-
-    playground.on_new_obstacles(obstacles);
-
-    pf.set_hitbox(robot.boundingRect());
-    pf.set_current_pos(robot.pos());
-
-    QPixmap robotPixmap = QPixmap(robot_image_resource.data());
-    robot.setPixmap(robotPixmap.scaled(robotPixmap.width() * robot_scaling, robotPixmap.height() * robot_scaling));
-    robot.setPos(QPointF(500, 500));
-    playground.addItem(&robot);
-
-    QPixmap fragile_plant_Pixmap = QPixmap(fragile_plant_ressource.data());
-    QPixmap fragile_plant_pot_Pixmap = QPixmap(fragile_plant_pot_ressource.data());
-    QPixmap regular_plant_Pixmap = QPixmap(regular_plant_ressource.data());
-    QPixmap regular_plant_pot_Pixmap = QPixmap(regular_plant_pot_ressource.data());
-
-    plants.emplaceBack(new Plants(fragile_plant_Pixmap, QRect(200, 200, 500, 500)));
-
-    playground.addItem(plants.back());
-
-    //    fragile_plant.setPixmap(fragile_plant_Pixmap.scaled(fragile_plant_Pixmap.width() * robot_scaling, fragile_plant_Pixmap.height() * robot_scaling));
-    //    fragile_plant.setPos(QPointF(100,100));
-    //    playground.addItem(&fragile_plant_Pixmap);
-
-    button_group.setExclusive(true);
-
-    ui->btn_blue_menu_start->setCheckable(true);
-    ui->btn_yellow_menu_start->setCheckable(true);
-    ui->btn_blue_menu_start->setStyleSheet("QPushButton::checked{background-color: rgb(0,0,255);}");
-    ui->btn_yellow_menu_start->setStyleSheet("QPushButton::checked{background-color: rgb(255,255,0);}");
-    teamChoice.addButton(ui->btn_blue_menu_start);
-    teamChoice.addButton(ui->btn_yellow_menu_start);
-    teamChoice.setExclusive(true);
-
-    pf.set_hitbox(robot.boundingRect());
-    pf.set_current_pos(robot.pos());
-
-    connect(this, &MainWindow::new_goal, &pf, &path_finder<differential>::set_new_goal);
-    connect(this, &MainWindow::new_obstacles, &pf, &path_finder<differential>::set_obstacles); // Detection Manager
-    connect(this, &MainWindow::new_obstacles, &playground, &playground_scene::on_new_obstacles);
-    connect(&pf, &path_finder<differential>::new_path_found, &playground, &playground_scene::on_new_path);
-    connect(&robot, &robot_graphic_item::posChanged, &pf, &path_finder<differential>::set_current_pos);
-
-    pf.set_new_goal(QPointF(playground_width, playground_height), 0);
-    pf.set_static_obstacles(obstacles);
-
-    ui->stackedWidget->setCurrentWidget(ui->menu);
-    connectButtons();
     readTestFiles();
 }
 
@@ -290,17 +224,96 @@ void MainWindow::go_to_test()
     ui->list_map_test_2->clear();
 }
 
-//std::vector<obstacle> MainWindow::newObstacles(game_element newElem)
-//{
-//    obstacles.push_back(newElem);
-//    return obstacles;
-//}
+void MainWindow::init_buttons(void)
+{
+    button_group.setExclusive(true);
 
-//void MainWindow::setObstacles()
-//{
-//    newObstacles(fragile_plant_pot);
-//    newObstacles(fragile_plant);
-//    newObstacles(regular_plant_pot);
-//    newObstacles(regular_plant);
+    ui->btn_blue_menu_start->setCheckable(true);
+    ui->btn_yellow_menu_start->setCheckable(true);
+    ui->btn_blue_menu_start->setStyleSheet("QPushButton::checked{background-color: rgb(0,0,255);}");
+    ui->btn_yellow_menu_start->setStyleSheet("QPushButton::checked{background-color: rgb(255,255,0);}");
+    teamChoice.addButton(ui->btn_blue_menu_start);
+    teamChoice.addButton(ui->btn_yellow_menu_start);
+    teamChoice.setExclusive(true);
 
-//}
+    ui->stackedWidget->setCurrentWidget(ui->menu);
+    connectButtons();
+}
+
+void MainWindow::init_playground(void)
+{
+    QRectF sceneRect(0, 0, playground_width, playground_height);
+    QImage image = QIcon(playground_image_resource.data()).pixmap(sceneRect.width(), sceneRect.height()).toImage();
+
+    playground.setSceneRect(sceneRect);
+    playground.setBackgroundBrush(image);
+    // playground strat
+    ui->playground->setAttribute(Qt::WA_AcceptTouchEvents);
+    ui->playground->scale(scaling, scaling);
+    ui->playground->setScene(&playground);
+    // playground test
+    ui->playground_test->setAttribute(Qt::WA_AcceptTouchEvents);
+    ui->playground_test->scale(scaling, scaling);
+    ui->playground_test->setScene(&playground);
+}
+
+void MainWindow::init_plants(void)
+{
+    QPixmap fragile_plant_Pixmap = QPixmap(fragile_plant_ressource.data());
+    QPixmap fragile_plant_pot_Pixmap = QPixmap(fragile_plant_pot_ressource.data());
+    QPixmap regular_plant_Pixmap = QPixmap(regular_plant_ressource.data());
+    QPixmap regular_plant_pot_Pixmap = QPixmap(regular_plant_pot_ressource.data());
+
+    plants.emplaceBack(new Plants(fragile_plant_Pixmap, QRect(200, 200, 500, 500)));
+
+    playground.addItem(plants.back());
+
+    //    fragile_plant.setPixmap(fragile_plant_Pixmap.scaled(fragile_plant_Pixmap.width() * robot_scaling, fragile_plant_Pixmap.height() * robot_scaling));
+    //    fragile_plant.setPos(QPointF(100,100));
+    //    playground.addItem(&fragile_plant_Pixmap);
+}
+
+void MainWindow::init_robot(void)
+{
+    QPixmap robotPixmap = QPixmap(robot_image_resource.data());
+    robot.setPixmap(robotPixmap.scaled(robotPixmap.width() * robot_scaling, robotPixmap.height() * robot_scaling));
+    robot.setPos(QPointF(500, 500));
+    playground.addItem(&robot);
+}
+
+void MainWindow::init_obstacles(void)
+{
+    QPolygonF leftBorder = {QPointF(-1 * border_gap, -1 * border_gap) , QPointF(-1 * border_gap, playground_height + border_gap)};
+    QPolygonF rightBorder = {QPointF(playground_width + border_gap, border_gap) , QPointF(playground_width + border_gap, playground_height + border_gap)};
+    QPolygonF upBorder = {QPointF(-1 * border_gap, -1 * border_gap) , QPointF(playground_width + border_gap, border_gap)};
+    QPolygonF downBorder = {QPointF(-1 * border_gap, playground_height + border_gap) , QPointF(playground_width + border_gap, playground_height + border_gap)};
+    QPolygonF ennemy = QPolygonF(QRectF(QPointF(2100, 1100), QPointF(2200,1900)));
+
+    obstacles.push_back(obstacle(leftBorder));
+    obstacles.push_back(obstacle(rightBorder));
+    obstacles.push_back(obstacle(upBorder));
+    obstacles.push_back(obstacle(downBorder));
+
+    obstacles.push_back(obstacle(QPointF(300, 300), 100, 500));
+
+    playground.on_new_obstacles(obstacles);
+}
+
+void MainWindow::init_path_finder(void)
+{
+    pf.set_hitbox(robot.boundingRect());
+    pf.set_current_pos(robot.pos());
+
+    pf.set_obstacles(obstacles);
+    pf.set_static_obstacles(obstacles);
+
+    connect(this, &MainWindow::new_goal, &pf, &path_finder<differential>::set_new_goal);
+    connect(this, &MainWindow::new_obstacles, &pf, &path_finder<differential>::set_obstacles); // Detection Manager
+    connect(this, &MainWindow::new_obstacles, &playground, &playground_scene::on_new_obstacles);
+    connect(&pf, &path_finder<differential>::new_path_found, &playground, &playground_scene::on_new_path);
+    connect(&robot, &robot_graphic_item::posChanged, &pf, &path_finder<differential>::set_current_pos);
+    connect(&pf, &path_finder<differential>::emergency_stop, [](){qDebug() << "emergency stop" << Qt::endl;});
+
+    emit new_goal(QPointF(playground_width/2, playground_height/2), 0);
+    emit new_obstacles(obstacles);
+}
