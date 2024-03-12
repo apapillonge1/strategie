@@ -4,6 +4,8 @@
 #include "strategy/STM/state.h"
 #include "context.h"
 
+#include <iostream>
+
 struct Line : public state<Context, nlohmann::json> {
 public:
     Line(const std::string & name,  const nlohmann::json & params) : state<Context, nlohmann::json>(name, params){

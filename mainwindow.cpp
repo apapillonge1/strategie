@@ -1,8 +1,7 @@
 #include "mainwindow.h"
 #include <QRectF>
-
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir("./../tests"), strat_dir("./../strats")
+    : QMainWindow(parent), ui(new Ui::mainWindow), stackedWidget(new QStackedWidget), test_strat_dir(STRATS_DIR_RPI), strat_dir(TESTS_DIR_RPI)
 {
 
     nbrItemsListWidget = 0;
@@ -133,8 +132,8 @@ void MainWindow::launchSelectedStrategy()
         ui->stackedWidget->setCurrentWidget(ui->menu_start);
 
         QString filename = button_group.checkedButton()->text();
-
-        auto stm = make_stm_from_json<action_factory<Context>>(ctx, filename.toStdString(), "../strats/"); //<action_factory<context_vrac>>(ctx, "strat_name", "strat_directory");
+        std::cout << "path to start file" << filename.toStdString() << std::endl;
+        auto stm = make_stm_from_json<action_factory<Context>>(ctx, filename.toStdString(), STRATS_DIR_RPI); //<action_factory<context_vrac>>(ctx, "strat_name", "strat_directory");
         auto manager = new strategyManager(stm);
 
         return;
