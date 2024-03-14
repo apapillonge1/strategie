@@ -46,6 +46,11 @@ include_directories("../VRAC_SDK/libs/fmt")
 include_directories("../VRAC_SDK/libs/nlohmann-json")
 include_directories("../VRAC_SDK/libs/range-v3")
 
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm")
+    add_compile_definitions(IS_RASPBERRY_PI)
+
+endif()
+
 qt6_add_resources("./ressources.qrc")
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -70,6 +75,8 @@ else()
         )
     endif()
 endif()
+
+
 
 target_include_directories(strategie PUBLIC
     ../VRAC_sdk/include
